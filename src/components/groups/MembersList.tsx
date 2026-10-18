@@ -50,7 +50,7 @@ export const MembersList: React.FC<MembersListProps> = ({
           aria-label="Invite member"
           className="p-2 bg-green-50 text-green-600 rounded-full hover:bg-green-100 transition-colors"
         >
-          <UserPlus size={18} />
+          <UserPlus size={18} aria-hidden="true" />
         </button>
       </div>
 

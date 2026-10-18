@@ -25,8 +25,8 @@ export const NextMilestone: React.FC<NextMilestoneProps> = ({
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-[0_12px_40px_rgba(0,0,0,0.08)] relative overflow-hidden h-full flex flex-col">
-      <div className="absolute top-4 right-4 text-gray-200">
-        <GraduationCap size={80} strokeWidth={1} />
+      <div className="absolute top-4 right-4 text-gray-200" aria-hidden="true">
+        <GraduationCap size={80} strokeWidth={1} aria-hidden="true" />
       </div>
 
       <div className="text-center mb-8 relative z-10">
@@ -90,7 +90,7 @@ export const NextMilestone: React.FC<NextMilestoneProps> = ({
           onClick={onContribute}
           className="w-full bg-[#047857] hover:bg-[#065f46] text-white py-4 rounded-xl flex items-center justify-center font-medium transition-colors"
         >
-          <PlusCircle className="mr-2" size={20} />
+          <PlusCircle className="mr-2" size={20} aria-hidden="true" />
           Contribute Now
         </button>
       </div>
