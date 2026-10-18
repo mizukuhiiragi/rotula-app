@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const links = [
   { href: "#how-it-works", label: "How it works" },
@@ -11,6 +11,23 @@ const links = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
 
   return (
     <header className="absolute inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 lg:px-8">
@@ -44,6 +61,7 @@ export default function Navbar() {
         </a>
 
         <button
+          ref={toggleRef}
           type="button"
           className="rounded-lg p-2 text-[#101a2c] md:hidden"
           onClick={() => setOpen(!open)}
