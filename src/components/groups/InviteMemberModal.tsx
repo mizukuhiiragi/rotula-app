@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { Modal } from "../common/Modal/Modal";
+import { HeadingLevel, Modal } from "../common/Modal/Modal";
 
 interface InviteMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
   onInvite: (emailOrPhone: string) => void;
+  headingLevel?: HeadingLevel;
 }
 
 export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
   isOpen,
   onClose,
   onInvite,
+  headingLevel,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [error, setError] = useState("");
@@ -37,7 +39,12 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Invite Member">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Invite Member"
+      headingLevel={headingLevel}
+    >
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label
