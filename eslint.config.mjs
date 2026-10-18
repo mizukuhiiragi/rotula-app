@@ -13,6 +13,20 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: ["src/**/*.{test,spec}.{ts,tsx}", "src/__tests__/**"],
+    rules: {
+      "no-console": [
+        "error",
+        {
+          // Legitimate diagnostic output (warnings & errors) has an explicit exemption;
+          // arbitrary console.log / debug in application code fails the lint run.
+          allow: ["warn", "error"],
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;

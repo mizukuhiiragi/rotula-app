@@ -101,7 +101,8 @@ export default function GroupDetails() {
   ];
 
   const handleInvite = (emailOrPhone: string) => {
-    console.log("Inviting:", emailOrPhone);
+    // Placeholder until invitation submission is wired (#185)
+    void emailOrPhone;
     setIsInviteModalOpen(false);
   };
 
@@ -148,7 +149,9 @@ export default function GroupDetails() {
                   : 600000
               }
               dueDate="Sept 15"
-              onContribute={() => console.log("Contribute clicked")}
+              onContribute={() => {
+                // Placeholder until contribute action is wired (#184)
+              }}
             />
           </div>
           <RecentDeposits deposits={deposits} />
