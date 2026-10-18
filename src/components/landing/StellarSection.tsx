@@ -37,7 +37,6 @@ export default function StellarSection() {
                   </div>
                   <p className="mt-1 text-xs text-[#b5c0d1] sm:text-sm">{role}</p>
                 </div>
-                <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 text-[#8293ad]" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
               </div>
             ))}
           </div>
