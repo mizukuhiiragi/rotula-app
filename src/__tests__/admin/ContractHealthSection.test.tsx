@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { ContractHealthSection } from "@/components/admin/sections/ContractHealthSection";
 import type { ContractHealthIndicator } from "@/types/admin";
@@ -36,5 +36,26 @@ describe("ContractHealthSection", () => {
     expect(screen.getByText("1,204")).toBeInTheDocument();
     expect(screen.getByText("1,249")).toBeInTheDocument();
     expect(screen.queryByText("1.2K")).not.toBeInTheDocument();
+  });
+
+  it("renders the contract status exactly once per card without duplicate coloured dots", () => {
+    const { container } = render(<ContractHealthSection contracts={mockContracts} />);
+
+    // Check each card has status rendered once via StatusBadge
+    const cards = container.querySelectorAll(".rounded-xl.border");
+    expect(cards).toHaveLength(2);
+
+    cards.forEach((card, index) => {
+      const cardScope = within(card as HTMLElement);
+      const expectedStatus = mockContracts[index].status;
+
+      // Status text appears in StatusBadge
+      const badges = cardScope.getAllByText(expectedStatus);
+      expect(badges).toHaveLength(1);
+
+      // Verify no redundant status dot (h-2.5 w-2.5 rounded-full) is rendered in the card header
+      const dots = card.querySelectorAll("span.rounded-full.h-2\\.5, span.h-2\\.5.w-2\\.5");
+      expect(dots).toHaveLength(0);
+    });
   });
 });

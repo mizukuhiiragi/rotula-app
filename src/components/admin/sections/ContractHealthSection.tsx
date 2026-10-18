@@ -6,12 +6,6 @@ import { formatNumber } from "@/utils/formatters/number";
 import { SectionCard } from "../ui/SectionCard";
 import { StatusBadge } from "../ui/StatusBadge";
 
-const STATUS_DOT: Record<ContractHealthIndicator["status"], string> = {
-  healthy: "bg-emerald-500",
-  degraded: "bg-amber-500",
-  down: "bg-rose-500",
-};
-
 /** Smart-contract health tab: per-contract uptime / latency indicators. */
 export function ContractHealthSection({
   contracts,
@@ -30,15 +24,9 @@ export function ContractHealthSection({
             className="rounded-xl border border-slate-100 p-4"
           >
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2">
-                <span
-                  className={`h-2.5 w-2.5 rounded-full ${STATUS_DOT[contract.status]}`}
-                  aria-hidden
-                />
-                <span className="font-medium text-slate-800">
-                  {contract.name}
-                </span>
-              </div>
+              <span className="font-medium text-slate-800">
+                {contract.name}
+              </span>
               <StatusBadge status={contract.status} />
             </div>
 
