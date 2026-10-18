@@ -54,7 +54,7 @@ describe("MembersList", () => {
     expect(onInvite).toHaveBeenCalledTimes(2);
 
     // No member status badges or names rendered
-    expect(screen.queryByText("CONTRIBUTED")).not.toBeInTheDocument();
+    expect(screen.queryByText("Contributed")).not.toBeInTheDocument();
   });
 
   it("renders populated members with details and status badges", async () => {
@@ -71,14 +71,15 @@ describe("MembersList", () => {
     // Empty state is not rendered
     expect(screen.queryByText("No members yet")).not.toBeInTheDocument();
 
-    // Members and their details
+    // Members and their details. Status and role render as readable labels
+    // rather than the raw enum values (see the status-label change).
     expect(screen.getByText("Chidi Anagonye")).toBeInTheDocument();
     expect(screen.getByText("Admin")).toBeInTheDocument();
-    expect(screen.getByText("CONTRIBUTED")).toBeInTheDocument();
+    expect(screen.getByText("Contributed")).toBeInTheDocument();
 
     expect(screen.getByText("Tahani Al-Jamil")).toBeInTheDocument();
     expect(screen.getByText("Member")).toBeInTheDocument();
-    expect(screen.getByText("WAITING")).toBeInTheDocument();
+    expect(screen.getByText("Waiting")).toBeInTheDocument();
 
     // Fallback initial
     expect(screen.getByText("T")).toBeInTheDocument();
