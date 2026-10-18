@@ -37,8 +37,12 @@ export default function Dashboard() {
         {/* Balance Card Section */}
         <section>
           {walletError ? (
-            <div className="w-full h-36 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center text-red-600 font-medium shadow-sm">
-              Error loading wallet data
+            <div
+              role="alert"
+              aria-live="polite"
+              className="w-full h-36 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center text-red-600 font-medium shadow-sm"
+            >
+              {walletError.message || "Error loading wallet data"}
             </div>
           ) : (
             <BalanceCard
@@ -53,8 +57,12 @@ export default function Dashboard() {
         {/* Savings Circles Section */}
         <section>
           {groupsError ? (
-            <div className="w-full h-64 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center text-red-600 font-medium shadow-sm">
-              Error loading savings groups
+            <div
+              role="alert"
+              aria-live="polite"
+              className="w-full h-64 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center text-red-600 font-medium shadow-sm"
+            >
+              {groupsError.message || "Error loading savings groups"}
             </div>
           ) : (
             <SavingsCircles
@@ -67,8 +75,12 @@ export default function Dashboard() {
         {/* Recent Activity Section */}
         <section>
           {paymentsError ? (
-            <div className="w-full min-h-96 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center text-red-600 font-medium shadow-sm">
-              Error loading transactions
+            <div
+              role="alert"
+              aria-live="polite"
+              className="w-full min-h-96 bg-red-50 border border-red-100 rounded-2xl flex items-center justify-center text-red-600 font-medium shadow-sm"
+            >
+              {paymentsError.message || "Error loading transactions"}
             </div>
           ) : (
             <TransactionList

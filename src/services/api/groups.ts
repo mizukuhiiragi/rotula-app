@@ -129,4 +129,47 @@ export const groupsService = {
     const memberships = readMap(MEMBERSHIPS_KEY);
     return Boolean(memberships[groupId]);
   },
+
+  /**
+   * Fetch active savings groups for the dashboard.
+   * TODO: replace with real API — GET /savings-groups
+   */
+  async getSavingsGroups(): Promise<Array<{
+    id: string;
+    name: string;
+    tag: string;
+    saved: number;
+    target: number;
+    nextDate: string;
+    avatars: string[];
+  }>> {
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    return [
+      {
+        id: "1",
+        name: "Home Fund",
+        tag: "FAMILY HOME",
+        saved: 8200,
+        target: 10000,
+        nextDate: "Oct 24",
+        avatars: [
+          "https://i.pravatar.cc/150?u=1",
+          "https://i.pravatar.cc/150?u=2",
+          "+3",
+        ],
+      },
+      {
+        id: "2",
+        name: "Bali Retreat",
+        tag: "TRAVEL",
+        saved: 1450,
+        target: 3222,
+        nextDate: "Nov 02",
+        avatars: [
+          "https://i.pravatar.cc/150?u=3",
+          "https://i.pravatar.cc/150?u=4",
+        ],
+      },
+    ];
+  },
 };
