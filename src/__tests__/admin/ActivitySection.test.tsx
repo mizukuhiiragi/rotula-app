@@ -69,4 +69,12 @@ describe("ActivitySection", () => {
     expect(screen.getByText(/suspended account/)).toBeInTheDocument();
     expect(screen.getByText("usr_200")).toBeInTheDocument();
   });
+
+  it("renders an accessible empty message and omits the timeline rail when activity is empty", () => {
+    const { container } = render(<ActivitySection activity={[]} />);
+
+    expect(screen.getByText("No recent activity logged.")).toBeInTheDocument();
+    expect(container.querySelector("ol")).not.toBeInTheDocument();
+    expect(container.querySelector(".border-l")).not.toBeInTheDocument();
+  });
 });

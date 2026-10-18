@@ -21,33 +21,39 @@ export function ActivitySection({
       title="Activity Log"
       description="Recent administrative and system events"
     >
-      <ol className="relative space-y-5 border-l border-slate-100 pl-6">
-        {activity.map((entry) => (
-          <li key={entry.id} className="relative">
-            <span
-              className={`absolute -left-[27px] top-1.5 h-3 w-3 rounded-full ring-4 ring-white ${SEVERITY_DOT[entry.severity]}`}
-              aria-hidden="true"
-            />
-            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <StatusBadge status={entry.severity} />
-                <p className="text-sm text-slate-700">
-                  <span className="font-medium text-slate-900">
-                    {entry.actor}
-                  </span>{" "}
-                  {entry.action}{" "}
-                  <span className="font-mono text-xs text-slate-500">
-                    {entry.target}
-                  </span>
-                </p>
+      {activity.length === 0 ? (
+        <p className="py-8 text-center text-sm text-slate-400">
+          No recent activity logged.
+        </p>
+      ) : (
+        <ol className="relative space-y-5 border-l border-slate-100 pl-6">
+          {activity.map((entry) => (
+            <li key={entry.id} className="relative">
+              <span
+                className={`absolute -left-[27px] top-1.5 h-3 w-3 rounded-full ring-4 ring-white ${SEVERITY_DOT[entry.severity]}`}
+                aria-hidden="true"
+              />
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <StatusBadge status={entry.severity} />
+                  <p className="text-sm text-slate-700">
+                    <span className="font-medium text-slate-900">
+                      {entry.actor}
+                    </span>{" "}
+                    {entry.action}{" "}
+                    <span className="font-mono text-xs text-slate-500">
+                      {entry.target}
+                    </span>
+                  </p>
+                </div>
+                <time className="text-xs text-slate-400">
+                  {formatDateTime(entry.createdAt)}
+                </time>
               </div>
-              <time className="text-xs text-slate-400">
-                {formatDateTime(entry.createdAt)}
-              </time>
-            </div>
-          </li>
-        ))}
-      </ol>
+            </li>
+          ))}
+        </ol>
+      )}
     </SectionCard>
   );
 }
