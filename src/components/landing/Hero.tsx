@@ -35,7 +35,7 @@ export default function Hero() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[.18em] text-[#adc1e7]">Example circle</p>
-                  <h2 className="mt-2 font-display text-2xl font-semibold tracking-tight">The Sunday Circle</h2>
+                  <p className="mt-2 font-display text-2xl font-semibold tracking-tight">The Sunday Circle</p>
                 </div>
                 <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[11px] font-medium text-[#d7e6ff]">Concept UI</span>
               </div>
