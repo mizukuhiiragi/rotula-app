@@ -3,6 +3,8 @@
 import React from "react";
 import { Send, Plus, TrendingUp, TrendingDown } from "lucide-react";
 
+import { formatAmount } from "@/utils/formatters/currency";
+
 interface BalanceCardProps {
   balance?: number;
   currency?: string;
@@ -32,10 +34,7 @@ export function BalanceCard({
     );
   }
 
-  const formattedBalance = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(balance);
+  const formattedBalance = formatAmount(balance);
 
   const isPositiveTrend = trendPercentage >= 0;
 

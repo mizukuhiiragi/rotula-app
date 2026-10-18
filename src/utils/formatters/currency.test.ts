@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  formatAmount,
   formatCompactCurrency,
   formatCompactNumber,
   formatCurrency,
@@ -7,9 +8,28 @@ import {
 
 describe("currency formatters", () => {
   describe("formatCurrency", () => {
-    it("formats amounts as standard USD currency", () => {
+    it("formats amounts as standard USD currency with consistent fraction digits", () => {
       expect(formatCurrency(12500)).toBe("$12,500.00");
       expect(formatCurrency(0)).toBe("$0.00");
+    });
+
+    it("ensures whole-number and fractional inputs use the exact same fraction width (2 decimals)", () => {
+      expect(formatCurrency(100)).toBe("$100.00");
+      expect(formatCurrency(100.5)).toBe("$100.50");
+      expect(formatCurrency(100.555)).toBe("$100.56");
+    });
+  });
+
+  describe("formatAmount", () => {
+    it("formats amounts with consistent fraction digits without currency symbol", () => {
+      expect(formatAmount(12450)).toBe("12,450.00");
+      expect(formatAmount(0)).toBe("0.00");
+    });
+
+    it("ensures whole numbers and fractional numbers align with 2 decimal places", () => {
+      expect(formatAmount(50)).toBe("50.00");
+      expect(formatAmount(50.2)).toBe("50.20");
+      expect(formatAmount(50.25)).toBe("50.25");
     });
   });
 

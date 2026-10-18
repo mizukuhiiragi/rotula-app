@@ -1,5 +1,6 @@
 /**
- * Formats a numeric amount as a localized currency string.
+ * Formats a numeric amount as a localized currency string with consistent fraction width,
+ * ensuring whole-number and fractional amounts align cleanly in columns.
  *
  * @param amount - The value to format.
  * @param currency - ISO 4217 currency code (defaults to USD).
@@ -8,7 +9,25 @@ export const formatCurrency = (amount: number, currency = "USD"): string =>
   new Intl.NumberFormat("en-US", {
     style: "currency",
     currency,
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
+  }).format(amount);
+
+/**
+ * Formats a numeric amount with fixed decimal fraction digits (default 2),
+ * e.g. 12450 -> "12,450.00", 12.5 -> "12.50".
+ * Useful for aligned tabular and card displays without currency prefix.
+ *
+ * @param amount - The value to format.
+ * @param fractionDigits - Number of fraction digits (default 2).
+ */
+export const formatAmount = (
+  amount: number,
+  fractionDigits = 2,
+): string =>
+  new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
   }).format(amount);
 
 /**
