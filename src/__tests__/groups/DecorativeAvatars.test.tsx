@@ -70,7 +70,7 @@ describe("Decorative Avatars Accessibility (Issue #289)", () => {
     expect(initial).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("renders decorative avatar stack with alt=\"\" in GroupHeader", () => {
+  it('renders decorative avatar stack with alt="" in GroupHeader', () => {
     const { container } = render(
       <GroupHeader
         title="Lagos Savers"

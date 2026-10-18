@@ -1,7 +1,16 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent, waitFor, renderHook } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  renderHook,
+} from "@testing-library/react";
 import { renderToString } from "react-dom/server";
-import { InviteButton, useCanNativeShare } from "@/components/groups/InviteButton/InviteButton";
+import {
+  InviteButton,
+  useCanNativeShare,
+} from "@/components/groups/InviteButton/InviteButton";
 import { groupsService } from "@/services/api/groups";
 import type { Group } from "@/types/group";
 
@@ -35,14 +44,30 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
   describe("Dimension 1: Boundary & Clamping", () => {
     describe("useCanNativeShare capability boundary tests", () => {
       const capabilityBoundaries = [
-        { desc: "navigator.share undefined", shareVal: undefined, expected: false },
+        {
+          desc: "navigator.share undefined",
+          shareVal: undefined,
+          expected: false,
+        },
         { desc: "navigator.share null", shareVal: null, expected: false },
-        { desc: "navigator.share false boolean", shareVal: false, expected: false },
+        {
+          desc: "navigator.share false boolean",
+          shareVal: false,
+          expected: false,
+        },
         { desc: "navigator.share 0 number", shareVal: 0, expected: false },
         { desc: "navigator.share NaN", shareVal: NaN, expected: false },
         { desc: "navigator.share empty string", shareVal: "", expected: false },
-        { desc: "navigator.share standard function", shareVal: vi.fn(), expected: true },
-        { desc: "navigator.share async function", shareVal: async () => {}, expected: true },
+        {
+          desc: "navigator.share standard function",
+          shareVal: vi.fn(),
+          expected: true,
+        },
+        {
+          desc: "navigator.share async function",
+          shareVal: async () => {},
+          expected: true,
+        },
       ];
 
       it.each(capabilityBoundaries)(
@@ -73,7 +98,10 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
         { desc: "100 chars", name: "E".repeat(100) },
         { desc: "single emoji", name: "💰" },
         { desc: "multi emoji", name: "🎉 Naija Wealth Vault 🚀💰" },
-        { desc: "symbols & punctuation", name: "Sav!ngs & Inv@stments (100% Secure)" },
+        {
+          desc: "symbols & punctuation",
+          name: "Sav!ngs & Inv@stments (100% Secure)",
+        },
         { desc: "whitespace padded", name: "Trimmed Circle" },
         { desc: "HTML entities", name: "Kolo <Safe> & 'Smart' \"Circle\"" },
         { desc: "cyrillic script", name: "Сберегательный Кооператив 2026" },
@@ -93,7 +121,9 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
           });
 
           render(<InviteButton group={testGroup} />);
-          fireEvent.click(screen.getByRole("button", { name: /invite member/i }));
+          fireEvent.click(
+            screen.getByRole("button", { name: /invite member/i }),
+          );
 
           await waitFor(() => {
             expect(screen.getByText(name)).toBeInTheDocument();
@@ -121,7 +151,9 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
         async ({ contribution }) => {
           const testGroup = { ...mockGroup, contributionAmount: contribution };
           const { unmount } = render(<InviteButton group={testGroup} />);
-          expect(screen.getByRole("button", { name: /invite member/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /invite member/i }),
+          ).toBeInTheDocument();
           unmount();
         },
       );
@@ -137,9 +169,9 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
     const currencies = ["USDC", "XLM", "NGN", "EUR"] as const;
 
     const fullMatrix: Array<{
-      state: typeof states[number];
+      state: (typeof states)[number];
       hasNativeShare: boolean;
-      currency: typeof currencies[number];
+      currency: (typeof currencies)[number];
     }> = [];
 
     for (const state of states) {
@@ -179,23 +211,41 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
         const { unmount } = render(<InviteButton group={testGroup} />);
 
         if (state === "idle") {
-          expect(screen.getByRole("button", { name: /invite member/i })).toBeInTheDocument();
-          expect(screen.queryByRole("button", { name: /^share$/i })).not.toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /invite member/i }),
+          ).toBeInTheDocument();
+          expect(
+            screen.queryByRole("button", { name: /^share$/i }),
+          ).not.toBeInTheDocument();
         } else if (state === "generating") {
-          let resolvePromise: (val: { code: string; groupId: string; createdAt: number }) => void = () => {};
+          let resolvePromise: (val: {
+            code: string;
+            groupId: string;
+            createdAt: number;
+          }) => void = () => {};
           vi.spyOn(groupsService, "createInvite").mockReturnValueOnce(
             new Promise((res) => {
               resolvePromise = res;
             }),
           );
-          fireEvent.click(screen.getByRole("button", { name: /invite member/i }));
-          expect(screen.getByRole("button", { name: /generating…/i })).toBeDisabled();
-          expect(screen.queryByRole("button", { name: /^share$/i })).not.toBeInTheDocument();
+          fireEvent.click(
+            screen.getByRole("button", { name: /invite member/i }),
+          );
+          expect(
+            screen.getByRole("button", { name: /generating…/i }),
+          ).toBeDisabled();
+          expect(
+            screen.queryByRole("button", { name: /^share$/i }),
+          ).not.toBeInTheDocument();
           resolvePromise({ code: "C", groupId: "1", createdAt: Date.now() });
         } else if (state === "ready") {
-          fireEvent.click(screen.getByRole("button", { name: /invite member/i }));
+          fireEvent.click(
+            screen.getByRole("button", { name: /invite member/i }),
+          );
           await waitFor(() => {
-            expect(screen.getByRole("button", { name: /copy/i })).toBeInTheDocument();
+            expect(
+              screen.getByRole("button", { name: /copy/i }),
+            ).toBeInTheDocument();
           });
           const shareBtn = screen.queryByRole("button", { name: /^share$/i });
           if (hasNativeShare) {
@@ -203,13 +253,19 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
           } else {
             expect(shareBtn).not.toBeInTheDocument();
           }
-          expect(screen.getByRole("link", { name: /whatsapp/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("link", { name: /whatsapp/i }),
+          ).toBeInTheDocument();
         } else if (state === "error") {
-          fireEvent.click(screen.getByRole("button", { name: /invite member/i }));
+          fireEvent.click(
+            screen.getByRole("button", { name: /invite member/i }),
+          );
           await waitFor(() => {
             expect(screen.getByRole("alert")).toBeInTheDocument();
           });
-          expect(screen.queryByRole("button", { name: /^share$/i })).not.toBeInTheDocument();
+          expect(
+            screen.queryByRole("button", { name: /^share$/i }),
+          ).not.toBeInTheDocument();
         }
 
         unmount();
@@ -230,9 +286,15 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
       it.each(memberCombos)(
         "handles plan combo: $count members at $amount contribution",
         async ({ count, amount }) => {
-          const testGroup = { ...mockGroup, memberCount: count, contributionAmount: amount };
+          const testGroup = {
+            ...mockGroup,
+            memberCount: count,
+            contributionAmount: amount,
+          };
           const { unmount } = render(<InviteButton group={testGroup} />);
-          expect(screen.getByRole("button", { name: /invite member/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /invite member/i }),
+          ).toBeInTheDocument();
           unmount();
         },
       );
@@ -260,14 +322,18 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
           writable: true,
         });
 
-        const html = renderToString(<InviteButton group={{ ...mockGroup, id, name }} />);
+        const html = renderToString(
+          <InviteButton group={{ ...mockGroup, id, name }} />,
+        );
         expect(html).not.toContain("Share");
         expect(html).toContain("Invite Member");
       },
     );
 
     it("SSR: matches initial client render with zero hydration mismatch warnings", () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       Object.defineProperty(global, "navigator", {
         value: { ...originalNavigator, share: vi.fn() },
@@ -278,7 +344,9 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
       render(<InviteButton group={mockGroup} />);
 
       const hydrationErrors = consoleErrorSpy.mock.calls.filter((call) =>
-        call.some((arg) => typeof arg === "string" && arg.includes("Hydration")),
+        call.some(
+          (arg) => typeof arg === "string" && arg.includes("Hydration"),
+        ),
       );
       expect(hydrationErrors.length).toBe(0);
 
@@ -360,10 +428,14 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
           });
 
           render(<InviteButton group={mockGroup} />);
-          fireEvent.click(screen.getByRole("button", { name: /invite member/i }));
+          fireEvent.click(
+            screen.getByRole("button", { name: /invite member/i }),
+          );
 
           await waitFor(() => {
-            expect(screen.getByRole("button", { name: /copy/i })).toBeInTheDocument();
+            expect(
+              screen.getByRole("button", { name: /copy/i }),
+            ).toBeInTheDocument();
           });
 
           const shareBtn = screen.queryByRole("button", { name: /^share$/i });
@@ -382,10 +454,22 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
   // =========================================================================
   describe("Dimension 4: Negative Controls & Security Isolation", () => {
     const errorTypes = [
-      { desc: "AbortError on user dismissal", err: new DOMException("The user aborted a request.", "AbortError") },
-      { desc: "NotAllowedError on permission denial", err: new DOMException("Permission denied", "NotAllowedError") },
-      { desc: "InvalidStateError on internal failure", err: new DOMException("Invalid state", "InvalidStateError") },
-      { desc: "NetworkError during share operation", err: new DOMException("Network error", "NetworkError") },
+      {
+        desc: "AbortError on user dismissal",
+        err: new DOMException("The user aborted a request.", "AbortError"),
+      },
+      {
+        desc: "NotAllowedError on permission denial",
+        err: new DOMException("Permission denied", "NotAllowedError"),
+      },
+      {
+        desc: "InvalidStateError on internal failure",
+        err: new DOMException("Invalid state", "InvalidStateError"),
+      },
+      {
+        desc: "NetworkError during share operation",
+        err: new DOMException("Network error", "NetworkError"),
+      },
       { desc: "generic Error instance", err: new Error("Unexpected error") },
     ];
 
@@ -410,7 +494,9 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
         fireEvent.click(screen.getByRole("button", { name: /invite member/i }));
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: /^share$/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /^share$/i }),
+          ).toBeInTheDocument();
         });
 
         fireEvent.click(screen.getByRole("button", { name: /^share$/i }));
@@ -421,14 +507,22 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
 
         // Remained in ready state, alert error NOT shown
         expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /copy/i })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: /copy/i }),
+        ).toBeInTheDocument();
       },
     );
 
     describe("Clipboard error isolation", () => {
       const clipboardErrors = [
-        { desc: "NotAllowedError", err: new DOMException("Clipboard denied", "NotAllowedError") },
-        { desc: "SecurityError", err: new DOMException("Security violation", "SecurityError") },
+        {
+          desc: "NotAllowedError",
+          err: new DOMException("Clipboard denied", "NotAllowedError"),
+        },
+        {
+          desc: "SecurityError",
+          err: new DOMException("Security violation", "SecurityError"),
+        },
         { desc: "plain Error", err: new Error("Clipboard offline") },
       ];
 
@@ -452,10 +546,14 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
           });
 
           render(<InviteButton group={mockGroup} />);
-          fireEvent.click(screen.getByRole("button", { name: /invite member/i }));
+          fireEvent.click(
+            screen.getByRole("button", { name: /invite member/i }),
+          );
 
           await waitFor(() => {
-            expect(screen.getByRole("button", { name: /copy/i })).toBeInTheDocument();
+            expect(
+              screen.getByRole("button", { name: /copy/i }),
+            ).toBeInTheDocument();
           });
 
           fireEvent.click(screen.getByRole("button", { name: /copy/i }));
@@ -464,7 +562,9 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
             expect(clipboardMock.writeText).toHaveBeenCalledTimes(1);
           });
 
-          expect(screen.getByRole("button", { name: /copy/i })).toHaveTextContent("Copy");
+          expect(
+            screen.getByRole("button", { name: /copy/i }),
+          ).toHaveTextContent("Copy");
           expect(screen.queryByText("Copied!")).not.toBeInTheDocument();
         },
       );
@@ -483,7 +583,9 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
       ({ key }) => {
         render(<InviteButton group={mockGroup} />);
         fireEvent.keyDown(window, { key });
-        expect(screen.getByRole("button", { name: /invite member/i })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: /invite member/i }),
+        ).toBeInTheDocument();
       },
     );
   });
@@ -517,7 +619,9 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
         fireEvent.click(screen.getByRole("button", { name: /invite member/i }));
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: /copy/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /copy/i }),
+          ).toBeInTheDocument();
         });
 
         const copyBtn = screen.getByRole("button", { name: /copy/i });
@@ -528,7 +632,9 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
         expect(writeTextMock).toHaveBeenCalledTimes(clicks);
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: /copied!/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /copied!/i }),
+          ).toBeInTheDocument();
         });
       },
     );
@@ -538,8 +644,16 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
       const groupB = { ...mockGroup, id: "group-B", name: "Beta Squad" };
 
       vi.spyOn(groupsService, "createInvite")
-        .mockResolvedValueOnce({ code: "ALPHA_CODE", groupId: "group-A", createdAt: Date.now() })
-        .mockResolvedValueOnce({ code: "BETA_CODE", groupId: "group-B", createdAt: Date.now() });
+        .mockResolvedValueOnce({
+          code: "ALPHA_CODE",
+          groupId: "group-A",
+          createdAt: Date.now(),
+        })
+        .mockResolvedValueOnce({
+          code: "BETA_CODE",
+          groupId: "group-B",
+          createdAt: Date.now(),
+        });
 
       render(
         <div>
@@ -558,12 +672,18 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
       });
 
       expect(screen.queryByText("Beta Squad")).not.toBeInTheDocument();
-      expect(screen.getAllByRole("button", { name: /invite member/i }).length).toBe(1);
+      expect(
+        screen.getAllByRole("button", { name: /invite member/i }).length,
+      ).toBe(1);
     });
 
     it("unmounts safely during active generation without memory leaks or warnings", () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      vi.spyOn(groupsService, "createInvite").mockReturnValue(new Promise(() => {}));
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+      vi.spyOn(groupsService, "createInvite").mockReturnValue(
+        new Promise(() => {}),
+      );
 
       const { unmount } = render(<InviteButton group={mockGroup} />);
       fireEvent.click(screen.getByRole("button", { name: /invite member/i }));
@@ -579,7 +699,11 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
     it.each(sequentialIndices)(
       "batch generation cycle for sequential instance #%s",
       async (i) => {
-        const testGroup = { ...mockGroup, id: `g-seq-${i}`, name: `Sequential Cohort ${i}` };
+        const testGroup = {
+          ...mockGroup,
+          id: `g-seq-${i}`,
+          name: `Sequential Cohort ${i}`,
+        };
         vi.spyOn(groupsService, "createInvite").mockResolvedValueOnce({
           code: `SEQ_CODE_${i}`,
           groupId: testGroup.id,
@@ -590,7 +714,9 @@ describe("InviteButton 5D Hydration & Capabilities Test Suite", () => {
         fireEvent.click(screen.getByRole("button", { name: /invite member/i }));
 
         await waitFor(() => {
-          expect(screen.getByText(`Sequential Cohort ${i}`)).toBeInTheDocument();
+          expect(
+            screen.getByText(`Sequential Cohort ${i}`),
+          ).toBeInTheDocument();
         });
 
         unmount();

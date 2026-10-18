@@ -15,7 +15,9 @@ describe("Hero Component Accessibility", () => {
     expect(h1).toHaveTextContent(/Ajo, Esusu, Chama/i);
 
     // 2. Assert 'The Sunday Circle' is NOT a heading
-    const sundayHeading = screen.queryByRole("heading", { name: /The Sunday Circle/i });
+    const sundayHeading = screen.queryByRole("heading", {
+      name: /The Sunday Circle/i,
+    });
     expect(sundayHeading).toBeNull();
 
     // 3. Assert 'The Sunday Circle' is still rendered as illustrative content
@@ -24,7 +26,9 @@ describe("Hero Component Accessibility", () => {
     expect(sundayText.tagName).toBe("P");
 
     // 4. Assert the concept panel retains its accessible description
-    const illustration = screen.getByLabelText("Concept illustration of a Kolo savings group and Stellar ledger");
+    const illustration = screen.getByLabelText(
+      "Concept illustration of a Kolo savings group and Stellar ledger",
+    );
     expect(illustration).toBeInTheDocument();
     expect(illustration).toContainElement(sundayText);
   });
@@ -41,10 +45,14 @@ describe("Hero Component Accessibility", () => {
 
     // The immediately following section heading is the Features h2 (not an illustration h2)
     expect(headings[1].tagName).toBe("H2");
-    expect(headings[1]).toHaveTextContent(/Community-led saving, with Stellar underneath/i);
+    expect(headings[1]).toHaveTextContent(
+      /Community-led saving, with Stellar underneath/i,
+    );
 
     // No heading anywhere in the document contains "The Sunday Circle"
-    const sundayHeading = screen.queryByRole("heading", { name: /The Sunday Circle/i });
+    const sundayHeading = screen.queryByRole("heading", {
+      name: /The Sunday Circle/i,
+    });
     expect(sundayHeading).toBeNull();
   });
 });

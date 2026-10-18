@@ -27,44 +27,44 @@ export const RecentDeposits: React.FC<RecentDepositsProps> = ({ deposits }) => {
       ) : (
         <div className="space-y-4">
           {deposits.map((deposit) => (
-          <div
-            key={deposit.id}
-            className="flex items-center justify-between p-3 rounded-xl bg-[#f4f7f5] shadow-[inset_4px_4px_8px_rgba(0,0,0,0.04),inset_-4px_-4px_8px_rgba(255,255,255,1)] border border-gray-100 transition-colors"
-          >
-            <div className="flex items-center">
-              <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center overflow-hidden mr-3 ${deposit.isCurrentUser ? "bg-green-100 text-green-600" : "bg-blue-100 text-blue-600"}`}
-              >
-                {deposit.avatarUrl ? (
-                  <img
-                    src={deposit.avatarUrl}
-                    alt=""
-                    width={40}
-                    height={40}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span aria-hidden="true" className="font-semibold">
-                    {deposit.name.charAt(0)}
-                  </span>
-                )}
+            <div
+              key={deposit.id}
+              className="flex items-center justify-between p-3 rounded-xl bg-[#f4f7f5] shadow-[inset_4px_4px_8px_rgba(0,0,0,0.04),inset_-4px_-4px_8px_rgba(255,255,255,1)] border border-gray-100 transition-colors"
+            >
+              <div className="flex items-center">
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center overflow-hidden mr-3 ${deposit.isCurrentUser ? "bg-green-100 text-green-600" : "bg-blue-100 text-blue-600"}`}
+                >
+                  {deposit.avatarUrl ? (
+                    <img
+                      src={deposit.avatarUrl}
+                      alt=""
+                      width={40}
+                      height={40}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span aria-hidden="true" className="font-semibold">
+                      {deposit.name.charAt(0)}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {deposit.name}
+                  </p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide">
+                    {deposit.time}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">
-                  {deposit.name}
-                </p>
-                <p className="text-xs text-gray-500 uppercase tracking-wide">
-                  {deposit.time}
-                </p>
+              <div className="font-bold text-[#047857]">
+                +₦{deposit.amount.toLocaleString()}
               </div>
             </div>
-            <div className="font-bold text-[#047857]">
-              +₦{deposit.amount.toLocaleString()}
-            </div>
-          </div>
-        ))}
+          ))}
         </div>
       )}
     </div>

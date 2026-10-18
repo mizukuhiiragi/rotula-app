@@ -135,15 +135,17 @@ export const groupsService = {
    * Fetch active savings groups for the dashboard.
    * TODO: replace with real API — GET /savings-groups
    */
-  async getSavingsGroups(): Promise<Array<{
-    id: string;
-    name: string;
-    tag: string;
-    saved: number;
-    target: number;
-    nextDate: string;
-    avatars: string[];
-  }>> {
+  async getSavingsGroups(): Promise<
+    Array<{
+      id: string;
+      name: string;
+      tag: string;
+      saved: number;
+      target: number;
+      nextDate: string;
+      avatars: string[];
+    }>
+  > {
     await new Promise((resolve) => setTimeout(resolve, 800));
     return [
       {

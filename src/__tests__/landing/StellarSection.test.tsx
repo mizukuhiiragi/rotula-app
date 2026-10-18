@@ -12,14 +12,22 @@ describe("StellarSection Component", () => {
 
     // Renders headings and descriptions
     expect(
-      screen.getByRole("heading", { name: "A clear role for every layer." })
+      screen.getByRole("heading", { name: "A clear role for every layer." }),
     ).toBeInTheDocument();
 
     // Renders each layer title
-    expect(screen.getByRole("heading", { name: "WhatsApp" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Kolo backend" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Stellar" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Soroban" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "WhatsApp" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Kolo backend" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Stellar" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Soroban" }),
+    ).toBeInTheDocument();
 
     // Ensure no chevron navigation SVGs (path d="m9 18 6-6-6-6") are rendered inside layer rows
     const chevronPaths = container.querySelectorAll('path[d="m9 18 6-6-6-6"]');
@@ -32,7 +40,7 @@ describe("StellarSection Component", () => {
     expect(contractLink).toBeInTheDocument();
     expect(contractLink).toHaveAttribute(
       "href",
-      "https://github.com/Stellar-Kolo/kolo-contracts"
+      "https://github.com/Stellar-Kolo/kolo-contracts",
     );
   });
 });

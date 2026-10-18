@@ -29,7 +29,9 @@ export const useWallet = () => {
       } catch (err) {
         if (mounted) {
           setError(
-            err instanceof Error ? err : new Error("Failed to fetch wallet data"),
+            err instanceof Error
+              ? err
+              : new Error("Failed to fetch wallet data"),
           );
         }
       } finally {

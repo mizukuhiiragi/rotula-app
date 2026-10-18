@@ -31,7 +31,9 @@ describe("RecentDeposits", () => {
     // Empty state message is rendered and accessible
     expect(screen.getByText("No deposits yet")).toBeInTheDocument();
     expect(
-      screen.getByText(/contributions will appear here once members start depositing/i),
+      screen.getByText(
+        /contributions will appear here once members start depositing/i,
+      ),
     ).toBeInTheDocument();
 
     // No deposit rows or amounts rendered

@@ -43,7 +43,10 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
       const img = profileLink.querySelector("img");
       expect(img).toBeInTheDocument();
       expect(img).toHaveAttribute("alt", "Your profile");
-      expect(img).toHaveAttribute("src", expect.stringContaining("pravatar.cc"));
+      expect(img).toHaveAttribute(
+        "src",
+        expect.stringContaining("pravatar.cc"),
+      );
     });
 
     it("verifies wallet link exists alongside profile without collision", () => {
@@ -63,7 +66,9 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
 
     it("verifies notifications button is rendered with aria-label", () => {
       render(<Header />);
-      const notifButton = screen.getByRole("button", { name: /notifications/i });
+      const notifButton = screen.getByRole("button", {
+        name: /notifications/i,
+      });
       expect(notifButton).toBeInTheDocument();
     });
 
@@ -84,7 +89,7 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
         } else {
           expect(profileLink.getAttribute(attr)).toEqual(expected);
         }
-      }
+      },
     );
   });
 
@@ -112,7 +117,8 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
       { shiftKey: true, ctrlKey: true, altKey: true, metaKey: true },
     ];
 
-    const keyboardMatrix: Array<[string, typeof modifierCombinations[0]]> = [];
+    const keyboardMatrix: Array<[string, (typeof modifierCombinations)[0]]> =
+      [];
     for (const k of keys) {
       for (const m of modifierCombinations) {
         keyboardMatrix.push([k, m]);
@@ -128,7 +134,7 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
           fireEvent.keyDown(profileLink, { key, ...modifiers });
           fireEvent.keyUp(profileLink, { key, ...modifiers });
         }).not.toThrow();
-      }
+      },
     );
   });
 
@@ -151,16 +157,24 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
         expect(el).toBeTruthy();
         el.focus();
         expect(document.activeElement).toBe(el);
-      }
+      },
     );
 
     // Test tab sequence order between adjacent controls
     it("preserves proper tab order from left to right", () => {
       const { container } = render(<Header />);
-      const back = container.querySelector('button[aria-label="Go back"]') as HTMLElement;
-      const wallet = container.querySelector('a[aria-label="Wallet"]') as HTMLElement;
-      const notif = container.querySelector('button[aria-label="Notifications"]') as HTMLElement;
-      const profile = container.querySelector('a[aria-label="Profile"]') as HTMLElement;
+      const back = container.querySelector(
+        'button[aria-label="Go back"]',
+      ) as HTMLElement;
+      const wallet = container.querySelector(
+        'a[aria-label="Wallet"]',
+      ) as HTMLElement;
+      const notif = container.querySelector(
+        'button[aria-label="Notifications"]',
+      ) as HTMLElement;
+      const profile = container.querySelector(
+        'a[aria-label="Profile"]',
+      ) as HTMLElement;
 
       back.focus();
       expect(document.activeElement).toBe(back);
@@ -194,14 +208,10 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
         expect(() => {
           fireEvent[eventName as keyof typeof fireEvent](profileLink);
         }).not.toThrow();
-      }
+      },
     );
 
-    const childEventTargets = [
-      "img",
-      "header",
-      "h1",
-    ];
+    const childEventTargets = ["img", "header", "h1"];
 
     it.each(childEventTargets)(
       "events bubbling from %s do not corrupt header navigation state",
@@ -211,7 +221,7 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
         expect(() => {
           fireEvent.click(target);
         }).not.toThrow();
-      }
+      },
     );
   });
 
@@ -220,11 +230,41 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
   // =========================================================================
   describe("Dimension 4: Negative Controls & Event Isolation", () => {
     const unhandledKeys = [
-      "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
-      "Home", "End", "PageUp", "PageDown",
-      "Escape", "Tab", "CapsLock", "Backspace", "Delete",
-      "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",
-      "a", "z", "0", "9", "-", "_", "+", "=", "[", "]"
+      "ArrowUp",
+      "ArrowDown",
+      "ArrowLeft",
+      "ArrowRight",
+      "Home",
+      "End",
+      "PageUp",
+      "PageDown",
+      "Escape",
+      "Tab",
+      "CapsLock",
+      "Backspace",
+      "Delete",
+      "F1",
+      "F2",
+      "F3",
+      "F4",
+      "F5",
+      "F6",
+      "F7",
+      "F8",
+      "F9",
+      "F10",
+      "F11",
+      "F12",
+      "a",
+      "z",
+      "0",
+      "9",
+      "-",
+      "_",
+      "+",
+      "=",
+      "[",
+      "]",
     ];
 
     it.each(unhandledKeys)(
@@ -235,12 +275,14 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
         fireEvent.keyDown(profileLink, { key });
         expect(mockBack).not.toHaveBeenCalled();
         expect(mockPush).not.toHaveBeenCalled();
-      }
+      },
     );
 
     it("clicking notifications button does not trigger router.back() or profile navigation", () => {
       render(<Header />);
-      const notifButton = screen.getByRole("button", { name: /notifications/i });
+      const notifButton = screen.getByRole("button", {
+        name: /notifications/i,
+      });
       fireEvent.click(notifButton);
       expect(mockBack).not.toHaveBeenCalled();
       expect(mockPush).not.toHaveBeenCalled();
@@ -269,7 +311,7 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
           fireEvent.click(backBtn);
         }
         expect(mockBack).toHaveBeenCalledTimes(count);
-      }
+      },
     );
 
     it("survives rapid unmount and remount cycles without memory leaks or errors", () => {
@@ -288,7 +330,7 @@ describe("Header - Profile Navigation & Keyboard Accessibility (5D Matrix)", () 
         const { unmount } = render(<Header />);
         await new Promise((resolve) => setTimeout(resolve, delay));
         expect(() => unmount()).not.toThrow();
-      }
+      },
     );
   });
 });

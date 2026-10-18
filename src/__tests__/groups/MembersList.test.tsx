@@ -34,7 +34,9 @@ describe("MembersList", () => {
     // Empty state message and invite CTA are visible
     expect(screen.getByText("No members yet")).toBeInTheDocument();
     expect(
-      screen.getByText(/share an invite link to bring members into this circle/i),
+      screen.getByText(
+        /share an invite link to bring members into this circle/i,
+      ),
     ).toBeInTheDocument();
 
     // Both the header button and the empty state CTA call onInvite

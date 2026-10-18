@@ -15,7 +15,7 @@ describe("Traditions Component", () => {
     expect(
       screen.getByRole("heading", {
         name: /saving together is already a technology/i,
-      })
+      }),
     ).toBeInTheDocument();
 
     // Renders each tradition

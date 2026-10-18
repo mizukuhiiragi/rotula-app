@@ -35,8 +35,7 @@ const ROLE_LABELS: Record<string, string> = {
   MEMBER: "Member",
 };
 
-const getRoleLabel = (role: string): string =>
-  ROLE_LABELS[role] ?? role;
+const getRoleLabel = (role: string): string => ROLE_LABELS[role] ?? role;
 
 interface MembersListProps {
   members: Member[];
@@ -94,46 +93,46 @@ export const MembersList: React.FC<MembersListProps> = ({
       ) : (
         <div className="space-y-5">
           {members.map((member) => (
-          <div key={member.id} className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden mr-3">
-                {member.avatarUrl ? (
-                  <img
-                    src={member.avatarUrl}
-                    alt=""
-                    width={40}
-                    height={40}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div
-                    aria-hidden="true"
-                    className="w-full h-full flex items-center justify-center text-gray-500 font-semibold bg-blue-50"
-                  >
-                    {member.name.charAt(0)}
-                  </div>
-                )}
+            <div key={member.id} className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden mr-3">
+                  {member.avatarUrl ? (
+                    <img
+                      src={member.avatarUrl}
+                      alt=""
+                      width={40}
+                      height={40}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      aria-hidden="true"
+                      className="w-full h-full flex items-center justify-center text-gray-500 font-semibold bg-blue-50"
+                    >
+                      {member.name.charAt(0)}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {member.name}
+                  </p>
+                  <p className="text-[10px] text-gray-500 uppercase tracking-widest">
+                    {getRoleLabel(member.role)}
+                  </p>
+                </div>
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-900">
-                  {member.name}
-                </p>
-                <p className="text-[10px] text-gray-500 uppercase tracking-widest">
-                  {getRoleLabel(member.role)}
-                </p>
+                <span
+                  className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider ${getStatusStyle(member.status)}`}
+                >
+                  {getStatusLabel(member.status)}
+                </span>
               </div>
             </div>
-            <div>
-              <span
-                className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider ${getStatusStyle(member.status)}`}
-              >
-                {getStatusLabel(member.status)}
-              </span>
-            </div>
-          </div>
-        ))}
+          ))}
         </div>
       )}
     </div>

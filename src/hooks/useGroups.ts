@@ -37,7 +37,9 @@ export const useGroups = () => {
       } catch (err) {
         if (mounted) {
           setError(
-            err instanceof Error ? err : new Error("Failed to fetch groups data"),
+            err instanceof Error
+              ? err
+              : new Error("Failed to fetch groups data"),
           );
         }
       } finally {

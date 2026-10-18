@@ -72,16 +72,18 @@ describe("NextMilestone", () => {
     const onContribute = vi.fn();
     const user = userEvent.setup();
 
-    render(
-      <NextMilestone {...defaultProps} onContribute={onContribute} />,
-    );
+    render(<NextMilestone {...defaultProps} onContribute={onContribute} />);
 
-    expect(screen.getByText("Next Milestone: Education Goal")).toBeInTheDocument();
+    expect(
+      screen.getByText("Next Milestone: Education Goal"),
+    ).toBeInTheDocument();
     expect(screen.getByText("₦25,000 left")).toBeInTheDocument();
     expect(screen.getByText("₦50,000")).toBeInTheDocument();
     expect(screen.getByText("2026-12-31")).toBeInTheDocument();
 
-    const contributeBtn = screen.getByRole("button", { name: /contribute now/i });
+    const contributeBtn = screen.getByRole("button", {
+      name: /contribute now/i,
+    });
     await user.click(contributeBtn);
 
     expect(onContribute).toHaveBeenCalledTimes(1);

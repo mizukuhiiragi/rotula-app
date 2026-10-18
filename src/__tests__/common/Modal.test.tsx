@@ -78,7 +78,9 @@ describe("Tailwind v4 Opacity Utilities Migration & Component Contracts", () => 
           <p>Special body</p>
         </Modal>,
       );
-      expect(screen.getByRole("heading", { level: 3 }).textContent).toBe(specialTitle);
+      expect(screen.getByRole("heading", { level: 3 }).textContent).toBe(
+        specialTitle,
+      );
     });
 
     it("renders with extremely long title string without crashing", () => {
@@ -88,7 +90,9 @@ describe("Tailwind v4 Opacity Utilities Migration & Component Contracts", () => 
           <p>Long title body</p>
         </Modal>,
       );
-      expect(screen.getByRole("heading", { level: 3 }).textContent).toBe(longTitle);
+      expect(screen.getByRole("heading", { level: 3 }).textContent).toBe(
+        longTitle,
+      );
     });
 
     it("renders with empty children fragment", () => {
@@ -153,7 +157,9 @@ describe("Tailwind v4 Opacity Utilities Migration & Component Contracts", () => 
             <p>Content for {idx}</p>
           </Modal>,
         );
-        expect(screen.getByRole("heading", { level: 3 }).textContent).toBe(titleText);
+        expect(screen.getByRole("heading", { level: 3 }).textContent).toBe(
+          titleText,
+        );
       });
     });
 
@@ -181,11 +187,15 @@ describe("Tailwind v4 Opacity Utilities Migration & Component Contracts", () => 
       const toggle = screen.getByRole("button", { name: /toggle navigation/i });
       fireEvent.click(toggle);
 
-      const overlay = container.querySelector(".fixed.inset-0.bg-black\\/50") as HTMLElement;
+      const overlay = container.querySelector(
+        ".fixed.inset-0.bg-black\\/50",
+      ) as HTMLElement;
       expect(overlay).toBeInTheDocument();
 
       fireEvent.click(overlay);
-      const closedOverlay = container.querySelector(".fixed.inset-0.bg-black\\/50");
+      const closedOverlay = container.querySelector(
+        ".fixed.inset-0.bg-black\\/50",
+      );
       expect(closedOverlay).toBeNull();
     });
 
@@ -216,11 +226,26 @@ describe("Tailwind v4 Opacity Utilities Migration & Component Contracts", () => 
       { name: "ctrlKey click", props: { ctrlKey: true } },
       { name: "altKey click", props: { altKey: true } },
       { name: "metaKey click", props: { metaKey: true } },
-      { name: "ctrlKey + shiftKey click", props: { ctrlKey: true, shiftKey: true } },
-      { name: "altKey + shiftKey click", props: { altKey: true, shiftKey: true } },
-      { name: "metaKey + shiftKey click", props: { metaKey: true, shiftKey: true } },
-      { name: "ctrlKey + altKey click", props: { ctrlKey: true, altKey: true } },
-      { name: "all modifiers click", props: { ctrlKey: true, altKey: true, shiftKey: true, metaKey: true } },
+      {
+        name: "ctrlKey + shiftKey click",
+        props: { ctrlKey: true, shiftKey: true },
+      },
+      {
+        name: "altKey + shiftKey click",
+        props: { altKey: true, shiftKey: true },
+      },
+      {
+        name: "metaKey + shiftKey click",
+        props: { metaKey: true, shiftKey: true },
+      },
+      {
+        name: "ctrlKey + altKey click",
+        props: { ctrlKey: true, altKey: true },
+      },
+      {
+        name: "all modifiers click",
+        props: { ctrlKey: true, altKey: true, shiftKey: true, metaKey: true },
+      },
     ];
 
     modifierCombinations.forEach(({ name, props }, idx) => {
@@ -309,7 +334,16 @@ describe("Tailwind v4 Opacity Utilities Migration & Component Contracts", () => 
   // DIMENSION 3: HOST VARIATIONS & DOM STRUCTURES (18 tests)
   // =========================================================================
   describe("Dimension 3: Host Variations & DOM structures", () => {
-    const containerTags = ["div", "main", "section", "article", "aside", "header", "footer", "nav"];
+    const containerTags = [
+      "div",
+      "main",
+      "section",
+      "article",
+      "aside",
+      "header",
+      "footer",
+      "nav",
+    ];
 
     containerTags.forEach((tag, idx) => {
       it(`host variation #${idx + 1}: renders cleanly in <${tag}> host element`, () => {
@@ -328,7 +362,18 @@ describe("Tailwind v4 Opacity Utilities Migration & Component Contracts", () => 
     });
 
     // Form element variations (10 tests)
-    const formInputTypes = ["text", "email", "password", "number", "search", "tel", "url", "checkbox", "radio", "date"];
+    const formInputTypes = [
+      "text",
+      "email",
+      "password",
+      "number",
+      "search",
+      "tel",
+      "url",
+      "checkbox",
+      "radio",
+      "date",
+    ];
     formInputTypes.forEach((inpType, idx) => {
       it(`host variation input #${idx + 1}: supports input[type="${inpType}"] inside children`, () => {
         render(

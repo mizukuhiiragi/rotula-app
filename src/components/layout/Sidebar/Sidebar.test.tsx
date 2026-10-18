@@ -33,7 +33,9 @@ describe("Sidebar (#236)", () => {
     render(<Sidebar />);
     const navItems = ["Home", "Savings", "Groups", "Payments", "Settings"];
     for (const name of navItems) {
-      const link = screen.getByRole("link", { name: new RegExp(`^${name}$`, "i") });
+      const link = screen.getByRole("link", {
+        name: new RegExp(`^${name}$`, "i"),
+      });
       const href = link.getAttribute("href");
       expect(href).toBeTruthy();
       expect(EXISTING_ROUTES.has(href!)).toBe(true);
@@ -46,38 +48,45 @@ describe("Sidebar (#236)", () => {
 
     const savingsLink = screen.getByRole("link", { name: /^Savings$/i });
     const homeLink = screen.getByRole("link", { name: /^Home$/i });
-    expect(savingsLink).toHaveClass("bg-[#5fe3a1]", "text-gray-900", "font-semibold");
+    expect(savingsLink).toHaveClass(
+      "bg-[#5fe3a1]",
+      "text-gray-900",
+      "font-semibold",
+    );
     expect(homeLink).toHaveClass("text-gray-600");
     expect(homeLink).not.toHaveClass("bg-[#5fe3a1]");
 
     mockUsePathname.mockReturnValue("/groups/circle-1");
     rerender(<Sidebar />);
-    expect(screen.getByRole("link", { name: /^Savings$/i })).toHaveClass("bg-[#5fe3a1]");
+    expect(screen.getByRole("link", { name: /^Savings$/i })).toHaveClass(
+      "bg-[#5fe3a1]",
+    );
   });
 
   it("preserves active-state behavior for Home, Groups, Payments, and Settings", () => {
-    const cases: Array<{ path: string; active: string[]; inactive: string[] }> = [
-      {
-        path: "/dashboard",
-        active: ["Home"],
-        inactive: ["Savings", "Groups", "Payments", "Settings"],
-      },
-      {
-        path: "/groups",
-        active: ["Savings", "Groups"],
-        inactive: ["Home", "Payments", "Settings"],
-      },
-      {
-        path: "/payments/send",
-        active: ["Payments"],
-        inactive: ["Home", "Savings", "Groups", "Settings"],
-      },
-      {
-        path: "/profile",
-        active: ["Settings"],
-        inactive: ["Home", "Savings", "Groups", "Payments"],
-      },
-    ];
+    const cases: Array<{ path: string; active: string[]; inactive: string[] }> =
+      [
+        {
+          path: "/dashboard",
+          active: ["Home"],
+          inactive: ["Savings", "Groups", "Payments", "Settings"],
+        },
+        {
+          path: "/groups",
+          active: ["Savings", "Groups"],
+          inactive: ["Home", "Payments", "Settings"],
+        },
+        {
+          path: "/payments/send",
+          active: ["Payments"],
+          inactive: ["Home", "Savings", "Groups", "Settings"],
+        },
+        {
+          path: "/profile",
+          active: ["Settings"],
+          inactive: ["Home", "Savings", "Groups", "Payments"],
+        },
+      ];
 
     const { rerender } = render(<Sidebar />);
     for (const { path, active, inactive } of cases) {
@@ -99,7 +108,9 @@ describe("Sidebar (#236)", () => {
 
   it("closes the mobile drawer when clicking the Savings link", () => {
     render(<Sidebar />);
-    const toggleBtn = screen.getByRole("button", { name: /toggle navigation/i });
+    const toggleBtn = screen.getByRole("button", {
+      name: /toggle navigation/i,
+    });
     const aside = screen.getByRole("complementary");
 
     expect(aside).toHaveClass("-translate-x-full");

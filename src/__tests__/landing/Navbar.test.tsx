@@ -6,7 +6,9 @@ import Navbar from "@/components/landing/Navbar";
 describe("Navbar Component - Mobile Menu Accessibility", () => {
   it("initializes with mobile menu closed and aria-expanded=false", () => {
     render(<Navbar />);
-    const toggleButton = screen.getByRole("button", { name: /open navigation/i });
+    const toggleButton = screen.getByRole("button", {
+      name: /open navigation/i,
+    });
     expect(toggleButton).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText("Explore the project ↗")).toBeNull();
   });
@@ -14,7 +16,9 @@ describe("Navbar Component - Mobile Menu Accessibility", () => {
   it("opens mobile menu and updates aria-expanded=true when toggle clicked", async () => {
     const user = userEvent.setup();
     render(<Navbar />);
-    const toggleButton = screen.getByRole("button", { name: /open navigation/i });
+    const toggleButton = screen.getByRole("button", {
+      name: /open navigation/i,
+    });
 
     await user.click(toggleButton);
 
@@ -26,7 +30,9 @@ describe("Navbar Component - Mobile Menu Accessibility", () => {
   it("closes the mobile menu and returns focus to the toggle button when Escape is pressed", async () => {
     const user = userEvent.setup();
     render(<Navbar />);
-    const toggleButton = screen.getByRole("button", { name: /open navigation/i });
+    const toggleButton = screen.getByRole("button", {
+      name: /open navigation/i,
+    });
 
     // Open menu
     await user.click(toggleButton);
@@ -47,7 +53,9 @@ describe("Navbar Component - Mobile Menu Accessibility", () => {
   it("closes the mobile menu when a navigation link inside the menu is clicked", async () => {
     const user = userEvent.setup();
     render(<Navbar />);
-    const toggleButton = screen.getByRole("button", { name: /open navigation/i });
+    const toggleButton = screen.getByRole("button", {
+      name: /open navigation/i,
+    });
 
     // Open menu
     await user.click(toggleButton);

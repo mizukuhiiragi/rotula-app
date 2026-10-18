@@ -55,7 +55,7 @@ describe("Dashboard Hooks - Data Layer Failure & Reachable Error States (#304)",
 
     it("surfaces real failure from data layer and populates error state", async () => {
       vi.mocked(walletService.getWallet).mockRejectedValue(
-        new Error("Stellar RPC unavailable")
+        new Error("Stellar RPC unavailable"),
       );
 
       const { result } = renderHook(() => useWallet());
@@ -98,7 +98,7 @@ describe("Dashboard Hooks - Data Layer Failure & Reachable Error States (#304)",
 
     it("surfaces real failure from data layer and populates error state", async () => {
       vi.mocked(groupsService.getSavingsGroups).mockRejectedValue(
-        new Error("Failed to load savings circles from database")
+        new Error("Failed to load savings circles from database"),
       );
 
       const { result } = renderHook(() => useGroups());
@@ -111,7 +111,7 @@ describe("Dashboard Hooks - Data Layer Failure & Reachable Error States (#304)",
       expect(result.current.data).toBeNull();
       expect(result.current.error).toBeInstanceOf(Error);
       expect(result.current.error?.message).toBe(
-        "Failed to load savings circles from database"
+        "Failed to load savings circles from database",
       );
     });
   });
@@ -144,7 +144,7 @@ describe("Dashboard Hooks - Data Layer Failure & Reachable Error States (#304)",
 
     it("surfaces real failure from data layer and populates error state", async () => {
       vi.mocked(paymentsService.getPayments).mockRejectedValue(
-        new Error("Payment gateway connection reset")
+        new Error("Payment gateway connection reset"),
       );
 
       const { result } = renderHook(() => usePayments());
@@ -157,7 +157,7 @@ describe("Dashboard Hooks - Data Layer Failure & Reachable Error States (#304)",
       expect(result.current.data).toBeNull();
       expect(result.current.error).toBeInstanceOf(Error);
       expect(result.current.error?.message).toBe(
-        "Payment gateway connection reset"
+        "Payment gateway connection reset",
       );
     });
   });

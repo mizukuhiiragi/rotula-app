@@ -56,11 +56,11 @@ The contract code has a [Testnet deployment](https://stellar.expert/explorer/tes
 
 ## Repositories
 
-| Project                                                                 | Responsibility                                                                  |
-| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [rotula-app](https://github.com/Rotula-Labs/rotula-app)                             | Landing page and web experience for members and administrators                                |
-| [rotula-api](https://github.com/Rotula-Labs/rotula-api)                             | WhatsApp workflows, application data, Stellar services, and Soroban orchestration |
-| [rotula-contracts](https://github.com/Rotula-Labs/rotula-contracts) | Rust Soroban savings-group contract and contract tests                                    |
+| Project                                                             | Responsibility                                                                    |
+| ------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [rotula-app](https://github.com/Rotula-Labs/rotula-app)             | Landing page and web experience for members and administrators                    |
+| [rotula-api](https://github.com/Rotula-Labs/rotula-api)             | WhatsApp workflows, application data, Stellar services, and Soroban orchestration |
+| [rotula-contracts](https://github.com/Rotula-Labs/rotula-contracts) | Rust Soroban savings-group contract and contract tests                            |
 
 ## What is in this repository
 
@@ -80,9 +80,9 @@ Several dashboard views use sample data. Login and registration are demo flows, 
 
 ## Prerequisites
 
-| Tool                   | Version / Notes                                                              | Install                                                                                     |
-| ------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------|
-| **Node.js**                | 20 or newer, with npm                                                                 | https://nodejs.org                                                                                        |
+| Tool                       | Version / Notes                                                                  | Install                                                                                                                      |
+| -------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Node.js**                | 20 or newer, with npm                                                            | https://nodejs.org                                                                                                           |
 | **Rotula API + contracts** | optional for landing-page work; needed for real group, wallet, and payment flows | [rotula-api](https://github.com/Rotula-Labs/rotula-api), [rotula-contracts](https://github.com/Rotula-Labs/rotula-contracts) |
 
 Verify your setup:

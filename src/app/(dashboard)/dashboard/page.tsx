@@ -69,10 +69,7 @@ export default function Dashboard() {
               {groupsError.message || "Error loading savings groups"}
             </div>
           ) : (
-            <SavingsCircles
-              groups={groups}
-              isLoading={isGroupsLoading}
-            />
+            <SavingsCircles groups={groups} isLoading={isGroupsLoading} />
           )}
         </section>
 
