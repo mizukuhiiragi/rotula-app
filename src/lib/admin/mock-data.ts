@@ -38,8 +38,24 @@ function mulberry32(seed: number): () => number {
   };
 }
 
-const BASE_TIME = Date.parse("2026-07-20T12:00:00.000Z");
-const DAY_MS = 86_400_000;
+/**
+ * Fixed reference timestamp preserved for deterministic tests and snapshots.
+ */
+export const FIXED_REFERENCE_TIME = Date.parse("2026-07-20T12:00:00.000Z");
+export const DAY_MS = 86_400_000;
+
+export type ReferenceTime = number | Date | string;
+
+export function resolveBaseTime(reference?: ReferenceTime): number {
+  if (reference !== undefined) {
+    return typeof reference === "number"
+      ? reference
+      : typeof reference === "string"
+        ? Date.parse(reference)
+        : reference.getTime();
+  }
+  return Date.now();
+}
 
 // Each fixture dataset owns its own seeded generator so that changing one
 // dataset's parameters never shifts the draws of any other dataset. The seeds
@@ -85,10 +101,15 @@ function createRand(seed: number): Rand {
   return { int, pick, chance, next, hashOf };
 }
 
-const isoDaysAgo = (days: number): string =>
-  new Date(BASE_TIME - days * DAY_MS).toISOString();
-const isoDaysAhead = (days: number): string =>
-  new Date(BASE_TIME + days * DAY_MS).toISOString();
+export const isoDaysAgo = (
+  days: number,
+  baseTime: number = resolveBaseTime(),
+): string => new Date(baseTime - days * DAY_MS).toISOString();
+
+export const isoDaysAhead = (
+  days: number,
+  baseTime: number = resolveBaseTime(),
+): string => new Date(baseTime + days * DAY_MS).toISOString();
 
 // --- Source pools ----------------------------------------------------------
 
@@ -202,7 +223,7 @@ const SEVERITIES: ActivitySeverity[] = ["info", "warning", "critical"];
 
 // --- Generators ------------------------------------------------------------
 
-function makeUsers(count: number): AdminUserRecord[] {
+function makeUsers(count: number, baseTime: number): AdminUserRecord[] {
   const { int, pick, chance } = createRand(USERS_SEED);
   const users: AdminUserRecord[] = [];
   for (let i = 0; i < count; i++) {
@@ -221,14 +242,16 @@ function makeUsers(count: number): AdminUserRecord[] {
       country: pick(COUNTRIES),
       groupsCount: int(0, 6),
       totalSaved: int(0, 9800) * 5,
-      joinedAt: isoDaysAgo(joinedDaysAgo),
-      lastActiveAt: isoDaysAgo(int(0, Math.min(joinedDaysAgo, 40))),
+      joinedAt: new Date(baseTime - joinedDaysAgo * DAY_MS).toISOString(),
+      lastActiveAt: new Date(
+        baseTime - int(0, Math.min(joinedDaysAgo, 40)) * DAY_MS,
+      ).toISOString(),
     });
   }
   return users;
 }
 
-function makeGroups(count: number): SavingsGroupRecord[] {
+function makeGroups(count: number, baseTime: number): SavingsGroupRecord[] {
   const { int, pick, chance, next } = createRand(GROUPS_SEED);
   const groups: SavingsGroupRecord[] = [];
   for (let i = 0; i < count; i++) {
@@ -246,8 +269,8 @@ function makeGroups(count: number): SavingsGroupRecord[] {
       targetAmount: target,
       savedAmount: Math.round(target * progress),
       contributionCycle: pick(["weekly", "biweekly", "monthly"] as const),
-      nextPayoutAt: isoDaysAhead(int(1, 45)),
-      createdAt: isoDaysAgo(int(20, 420)),
+      nextPayoutAt: new Date(baseTime + int(1, 45) * DAY_MS).toISOString(),
+      createdAt: new Date(baseTime - int(20, 420) * DAY_MS).toISOString(),
     });
   }
   return groups;
@@ -257,6 +280,7 @@ function makeTransactions(
   count: number,
   users: AdminUserRecord[],
   groups: SavingsGroupRecord[],
+  baseTime: number,
 ): TransactionRecord[] {
   const { int, pick, chance, hashOf } = createRand(TRANSACTIONS_SEED);
   const txns: TransactionRecord[] = [];
@@ -274,13 +298,13 @@ function makeTransactions(
       group: pick(groups).name,
       amount: type === "fee" ? int(1, 25) : int(10, 2500),
       asset: chance(0.7) ? "USDC" : "XLM",
-      createdAt: isoDaysAgo(int(0, 29)),
+      createdAt: new Date(baseTime - int(0, 29) * DAY_MS).toISOString(),
     });
   }
   return txns;
 }
 
-function makeContracts(): ContractHealthIndicator[] {
+function makeContracts(baseTime: number): ContractHealthIndicator[] {
   const { int, pick, chance, next, hashOf } = createRand(CONTRACTS_SEED);
   const definitions = [
     "SavingsPool",
@@ -291,6 +315,21 @@ function makeContracts(): ContractHealthIndicator[] {
   ];
   return definitions.map((name, i) => {
     const status = i === 1 ? "degraded" : chance(0.1) ? "down" : "healthy";
+    const invocations24h = int(200, 5200);
+
+    let minutesAgo: number;
+    if (status === "down") {
+      minutesAgo = 24 * 60 + int(60, 720) + i * 37;
+    } else if (status === "degraded") {
+      minutesAgo = int(45, 120) + i * 11;
+    } else {
+      const averageIntervalMinutes = Math.max(
+        1,
+        Math.round((24 * 60) / invocations24h),
+      );
+      minutesAgo = Math.max(1, int(1, 4) * averageIntervalMinutes + i * 3);
+    }
+
     return {
       id: `ctr_${(30 + i).toString()}`,
       name,
@@ -300,13 +339,13 @@ function makeContracts(): ContractHealthIndicator[] {
       uptimePct:
         status === "healthy" ? 99 + next() : status === "degraded" ? 96 : 82,
       avgLatencyMs: status === "healthy" ? int(120, 320) : int(400, 900),
-      invocations24h: int(200, 5200),
-      lastInvocationAt: isoDaysAgo(0),
+      invocations24h,
+      lastInvocationAt: new Date(baseTime - minutesAgo * 60_000).toISOString(),
     };
   });
 }
 
-function makeActivity(count: number): ActivityLogEntry[] {
+function makeActivity(count: number, baseTime: number): ActivityLogEntry[] {
   const { int, pick, chance } = createRand(ACTIVITY_SEED);
   const templates: Array<{
     action: string;
@@ -348,7 +387,7 @@ function makeActivity(count: number): ActivityLogEntry[] {
       action: t.action,
       target: t.target,
       severity: chance(0.7) ? t.severity : pick(SEVERITIES),
-      createdAt: isoDaysAgo(int(0, 14)),
+      createdAt: new Date(baseTime - int(0, 14) * DAY_MS).toISOString(),
     });
   }
   return entries.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
@@ -444,29 +483,42 @@ const METRICS: PlatformMetric[] = [
 
 // --- Assembly --------------------------------------------------------------
 
-const users = makeUsers(42);
-const groups = makeGroups(14);
-const transactions = makeTransactions(64, users, groups);
-const contracts = makeContracts();
-const activity = makeActivity(22);
+/**
+ * Builds the fully assembled admin dashboard dataset for a given reference time.
+ * If referenceTime is omitted, defaults to the current execution time.
+ */
+export function buildAdminDashboardData(
+  referenceTime?: ReferenceTime,
+): AdminDashboardData {
+  const baseTime = resolveBaseTime(referenceTime);
+  const users = makeUsers(42, baseTime);
+  const groups = makeGroups(14, baseTime);
+  const transactions = makeTransactions(64, users, groups, baseTime);
+  const contracts = makeContracts(baseTime);
+  const activity = makeActivity(22, baseTime);
 
-const dashboardData: AdminDashboardData = {
-  metrics: METRICS,
-  users,
-  groups,
-  transactions,
-  contracts,
-  activity,
-  savingsGrowth: makeSeries(12, 42000, 0.14, SAVINGS_GROWTH_SEED),
-  transactionVolume: makeSeries(12, 3200, 0.09, TRANSACTION_VOLUME_SEED),
-  userGrowth: makeSeries(12, 3600, 0.11, USER_GROWTH_SEED),
-  groupStatusBreakdown: statusBreakdown(groups),
-};
+  return {
+    metrics: METRICS,
+    users,
+    groups,
+    transactions,
+    contracts,
+    activity,
+    savingsGrowth: makeSeries(12, 42000, 0.14, SAVINGS_GROWTH_SEED),
+    transactionVolume: makeSeries(12, 3200, 0.09, TRANSACTION_VOLUME_SEED),
+    userGrowth: makeSeries(12, 3600, 0.11, USER_GROWTH_SEED),
+    groupStatusBreakdown: statusBreakdown(groups),
+  };
+}
 
 /**
  * Returns the fully assembled admin dashboard dataset.
+ * Defaults to anchoring dates to the current time, or accepts a reference
+ * timestamp for deterministic tests and snapshots.
  * Async to mirror the eventual real (network-backed) implementation.
  */
-export async function getAdminDashboardData(): Promise<AdminDashboardData> {
-  return dashboardData;
+export async function getAdminDashboardData(
+  referenceTime?: ReferenceTime,
+): Promise<AdminDashboardData> {
+  return buildAdminDashboardData(referenceTime);
 }
