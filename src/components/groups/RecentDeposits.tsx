@@ -17,8 +17,16 @@ export const RecentDeposits: React.FC<RecentDepositsProps> = ({ deposits }) => {
   return (
     <div className="bg-white rounded-2xl p-6 shadow-[0_12px_40px_rgba(0,0,0,0.08)] mt-6">
       <h3 className="text-lg font-bold text-gray-800 mb-4">Recent Deposits</h3>
-      <div className="space-y-4">
-        {deposits.map((deposit) => (
+      {deposits.length === 0 ? (
+        <div className="text-center py-8 px-4 rounded-xl bg-[#f4f7f5] border border-gray-100">
+          <p className="text-sm font-medium text-gray-600">No deposits yet</p>
+          <p className="text-xs text-gray-400 mt-1">
+            Contributions will appear here once members start depositing.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {deposits.map((deposit) => (
           <div
             key={deposit.id}
             className="flex items-center justify-between p-3 rounded-xl bg-[#f4f7f5] shadow-[inset_4px_4px_8px_rgba(0,0,0,0.04),inset_-4px_-4px_8px_rgba(255,255,255,1)] border border-gray-100 transition-colors"
@@ -57,7 +65,8 @@ export const RecentDeposits: React.FC<RecentDepositsProps> = ({ deposits }) => {
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
