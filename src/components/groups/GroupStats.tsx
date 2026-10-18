@@ -28,7 +28,9 @@ export const GroupStats: React.FC<GroupStatsProps> = ({
         <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest mb-1">
           Streak
         </p>
-        <p className="text-xl font-bold text-gray-900">{streak} Mos</p>
+        <p className="text-xl font-bold text-gray-900">
+          {streak} {Math.abs(streak) === 1 ? "Mo" : "Mos"}
+        </p>
       </div>
     </div>
   );
