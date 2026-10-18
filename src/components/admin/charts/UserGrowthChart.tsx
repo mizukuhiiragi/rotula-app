@@ -12,27 +12,22 @@ import {
 
 import type { TimeSeriesPoint } from "@/types/admin";
 import { formatCompactNumber } from "@/utils/formatters/currency";
+import {
+  chartAxisProps,
+  chartGridProps,
+  chartMargin,
+  chartTooltipContentStyle,
+} from "./chartTheme";
 
 /** Line chart of new users onboarded per month. */
 export function UserGrowthChart({ data }: { data: TimeSeriesPoint[] }) {
   return (
     <ResponsiveContainer width="100%" height={260}>
-      <LineChart data={data} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
-        <CartesianGrid
-          strokeDasharray="3 3"
-          stroke="#f1f5f9"
-          vertical={false}
-        />
-        <XAxis
-          dataKey="label"
-          tick={{ fontSize: 12, fill: "#94a3b8" }}
-          axisLine={false}
-          tickLine={false}
-        />
+      <LineChart data={data} margin={chartMargin}>
+        <CartesianGrid {...chartGridProps} />
+        <XAxis dataKey="label" {...chartAxisProps} />
         <YAxis
-          tick={{ fontSize: 12, fill: "#94a3b8" }}
-          axisLine={false}
-          tickLine={false}
+          {...chartAxisProps}
           width={52}
           tickFormatter={(value: number) => formatCompactNumber(value)}
         />
@@ -41,11 +36,7 @@ export function UserGrowthChart({ data }: { data: TimeSeriesPoint[] }) {
             formatCompactNumber(Number(value ?? 0)),
             "Users",
           ]}
-          contentStyle={{
-            borderRadius: 12,
-            border: "1px solid #e2e8f0",
-            fontSize: 12,
-          }}
+          contentStyle={chartTooltipContentStyle}
         />
         <Line
           type="monotone"

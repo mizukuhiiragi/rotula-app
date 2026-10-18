@@ -3,6 +3,7 @@
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 import type { GroupStatus, GroupStatusDatum } from "@/types/admin";
+import { chartTooltipContentStyle } from "./chartTheme";
 
 const STATUS_COLOR: Record<GroupStatus, string> = {
   active: "#006c49",
@@ -33,9 +34,7 @@ export function GroupStatusChart({ data }: { data: GroupStatusDatum[] }) {
         />
         <Tooltip
           contentStyle={{
-            borderRadius: 12,
-            border: "1px solid #e2e8f0",
-            fontSize: 12,
+            ...chartTooltipContentStyle,
             textTransform: "capitalize",
           }}
         />

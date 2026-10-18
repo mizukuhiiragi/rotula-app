@@ -15,43 +15,34 @@ import {
   formatCompactCurrency,
   formatCurrency,
 } from "@/utils/formatters/currency";
+import {
+  chartAxisProps,
+  chartGridProps,
+  chartMargin,
+  chartTooltipContentStyle,
+} from "./chartTheme";
 
 /** Area chart of cumulative platform savings over time (USD). */
 export function SavingsGrowthChart({ data }: { data: TimeSeriesPoint[] }) {
   return (
     <ResponsiveContainer width="100%" height={260}>
-      <AreaChart data={data} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
+      <AreaChart data={data} margin={chartMargin}>
         <defs>
           <linearGradient id="savingsFill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#006c49" stopOpacity={0.35} />
             <stop offset="95%" stopColor="#006c49" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid
-          strokeDasharray="3 3"
-          stroke="#f1f5f9"
-          vertical={false}
-        />
-        <XAxis
-          dataKey="label"
-          tick={{ fontSize: 12, fill: "#94a3b8" }}
-          axisLine={false}
-          tickLine={false}
-        />
+        <CartesianGrid {...chartGridProps} />
+        <XAxis dataKey="label" {...chartAxisProps} />
         <YAxis
-          tick={{ fontSize: 12, fill: "#94a3b8" }}
-          axisLine={false}
-          tickLine={false}
+          {...chartAxisProps}
           width={56}
           tickFormatter={(value: number) => formatCompactCurrency(value)}
         />
         <Tooltip
           formatter={(value) => [formatCurrency(Number(value ?? 0)), "Saved"]}
-          contentStyle={{
-            borderRadius: 12,
-            border: "1px solid #e2e8f0",
-            fontSize: 12,
-          }}
+          contentStyle={chartTooltipContentStyle}
         />
         <Area
           type="monotone"
