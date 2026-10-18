@@ -38,7 +38,7 @@ export const RecentDeposits: React.FC<RecentDepositsProps> = ({ deposits }) => {
                 {deposit.avatarUrl ? (
                   <img
                     src={deposit.avatarUrl}
-                    alt={deposit.name}
+                    alt=""
                     width={40}
                     height={40}
                     loading="lazy"
@@ -46,7 +46,7 @@ export const RecentDeposits: React.FC<RecentDepositsProps> = ({ deposits }) => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="font-semibold">
+                  <span aria-hidden="true" className="font-semibold">
                     {deposit.name.charAt(0)}
                   </span>
                 )}

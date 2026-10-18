@@ -100,7 +100,7 @@ export const MembersList: React.FC<MembersListProps> = ({
                 {member.avatarUrl ? (
                   <img
                     src={member.avatarUrl}
-                    alt={member.name}
+                    alt=""
                     width={40}
                     height={40}
                     loading="lazy"
@@ -108,7 +108,10 @@ export const MembersList: React.FC<MembersListProps> = ({
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-500 font-semibold bg-blue-50">
+                  <div
+                    aria-hidden="true"
+                    className="w-full h-full flex items-center justify-center text-gray-500 font-semibold bg-blue-50"
+                  >
                     {member.name.charAt(0)}
                   </div>
                 )}
