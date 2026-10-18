@@ -50,6 +50,24 @@ describe("groupsService.listGroups / getGroup", () => {
     });
     await expect(groupsService.getGroup("nope")).resolves.toBeNull();
   });
+
+  it("returns copies from listGroups so mutations cannot reach the seed", async () => {
+    const [first] = await groupsService.listGroups();
+    first.memberCount = 999;
+
+    const groups = await groupsService.listGroups();
+    expect(groups.find((group) => group.id === "g1")?.memberCount).toBe(8);
+  });
+
+  it("returns a copy from getGroup so mutations cannot reach the seed", async () => {
+    const group = await groupsService.getGroup("g1");
+    expect(group).not.toBeNull();
+    group!.memberCount = 999;
+
+    await expect(groupsService.getGroup("g1")).resolves.toMatchObject({
+      memberCount: 8,
+    });
+  });
 });
 
 describe("groupsService.createInvite / getInvite", () => {

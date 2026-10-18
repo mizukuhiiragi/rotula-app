@@ -67,12 +67,13 @@ function writeMap(key: string, value: Record<string, string>): void {
 export const groupsService = {
   /** TODO: replace with real API — GET /groups */
   async listGroups(): Promise<Group[]> {
-    return SEED_GROUPS;
+    return SEED_GROUPS.map((group) => ({ ...group }));
   },
 
   /** TODO: replace with real API — GET /groups/:id */
   async getGroup(id: string): Promise<Group | null> {
-    return SEED_GROUPS.find((group) => group.id === id) ?? null;
+    const group = SEED_GROUPS.find((seed) => seed.id === id);
+    return group ? { ...group } : null;
   },
 
   /**
