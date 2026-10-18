@@ -19,6 +19,13 @@ export const INVITES_KEY = "kolo_invites";
 export const MEMBERSHIPS_KEY = "kolo_memberships";
 
 /**
+ * Derives the storage key for a user's membership in a group.
+ */
+export function membershipKey(userId: string, groupId: string): string {
+  return `${userId}:${groupId}`;
+}
+
+/**
  * Seeded demo groups so the dashboard has something to invite people to.
  * TODO: replace with real API — GET /groups
  */
@@ -116,19 +123,30 @@ export const groupsService = {
   },
 
   /**
-   * Record the current user joining a group.
+   * Record a user joining a group.
+   * If the user is already a member, this is a no-op to avoid duplicate records
+   * or updating the original join timestamp.
    * TODO: replace with real API — POST /groups/:id/members
    */
-  async joinGroup(groupId: string): Promise<void> {
+  async joinGroup(groupId: string, userId: string): Promise<void> {
+    if (!groupId || !userId) return;
+    if (await this.hasJoined(groupId, userId)) {
+      return;
+    }
     const memberships = readMap(MEMBERSHIPS_KEY);
-    memberships[groupId] = new Date().toISOString();
+    memberships[membershipKey(userId, groupId)] = new Date().toISOString();
     writeMap(MEMBERSHIPS_KEY, memberships);
   },
 
-  /** Whether the current browser has already joined a group. */
-  async hasJoined(groupId: string): Promise<boolean> {
+  /** Whether the specified user has already joined a group. */
+  async hasJoined(groupId: string, userId: string): Promise<boolean> {
+    if (!groupId || !userId) return false;
     const memberships = readMap(MEMBERSHIPS_KEY);
-    return Boolean(memberships[groupId]);
+    const key = membershipKey(userId, groupId);
+    return (
+      Object.prototype.hasOwnProperty.call(memberships, key) &&
+      Boolean(memberships[key])
+    );
   },
 
   /**

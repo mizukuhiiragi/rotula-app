@@ -24,7 +24,7 @@ type Phase = "loading" | "invalid" | "redirecting" | "confirm" | "joined";
  */
 export function InviteConfirm({ code }: InviteConfirmProps) {
   const router = useRouter();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
 
   const [phase, setPhase] = useState<Phase>("loading");
   const [group, setGroup] = useState<Group | null>(null);
@@ -39,7 +39,7 @@ export function InviteConfirm({ code }: InviteConfirmProps) {
 
     groupsService
       .getInvite(code)
-      .then((resolution) => {
+      .then(async (resolution) => {
         if (!active) return;
 
         if (!resolution) {
@@ -59,6 +59,18 @@ export function InviteConfirm({ code }: InviteConfirmProps) {
           return;
         }
 
+        if (user) {
+          const already = await groupsService.hasJoined(
+            resolution.group.id,
+            user.id,
+          );
+          if (!active) return;
+          if (already) {
+            setPhase("joined");
+            return;
+          }
+        }
+
         setPhase("confirm");
       })
       .catch(() => {
@@ -70,14 +82,17 @@ export function InviteConfirm({ code }: InviteConfirmProps) {
     return () => {
       active = false;
     };
-  }, [authLoading, isAuthenticated, code, router]);
+  }, [authLoading, isAuthenticated, user, code, router]);
 
   async function handleJoin() {
-    if (!group) return;
+    if (!group || !user) return;
     setJoining(true);
     setJoinError(null);
     try {
-      await groupsService.joinGroup(group.id);
+      const alreadyJoined = await groupsService.hasJoined(group.id, user.id);
+      if (!alreadyJoined) {
+        await groupsService.joinGroup(group.id, user.id);
+      }
       setPhase("joined");
     } catch {
       // Keep the user on the confirm screen so they can retry.

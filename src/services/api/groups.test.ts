@@ -4,6 +4,7 @@ import {
   groupsService,
   INVITES_KEY,
   MEMBERSHIPS_KEY,
+  membershipKey,
 } from "@/services/api/groups";
 
 function createStorage(): Storage {
@@ -102,20 +103,64 @@ describe("groupsService.createInvite / getInvite", () => {
 });
 
 describe("groupsService.joinGroup / hasJoined", () => {
-  it("records membership under MEMBERSHIPS_KEY", async () => {
-    await expect(groupsService.hasJoined("g1")).resolves.toBe(false);
+  it("records membership under MEMBERSHIPS_KEY scoped by user and group", async () => {
+    await expect(groupsService.hasJoined("g1", "user-1")).resolves.toBe(false);
 
-    await groupsService.joinGroup("g1");
+    await groupsService.joinGroup("g1", "user-1");
 
-    await expect(groupsService.hasJoined("g1")).resolves.toBe(true);
+    await expect(groupsService.hasJoined("g1", "user-1")).resolves.toBe(true);
     const stored = JSON.parse(
       window.localStorage.getItem(MEMBERSHIPS_KEY) as string,
     ) as Record<string, string>;
-    expect(stored.g1).toBeTruthy();
+    const expectedKey = membershipKey("user-1", "g1");
+    expect(stored[expectedKey]).toBeTruthy();
+    expect(new Date(stored[expectedKey]).toISOString()).toBe(stored[expectedKey]);
+  });
+
+  it("does not report a second user on the same browser as already a member", async () => {
+    await groupsService.joinGroup("g1", "user-1");
+
+    // user-2 on the same browser has not joined
+    await expect(groupsService.hasJoined("g1", "user-2")).resolves.toBe(false);
+
+    // user-1 has not joined another group
+    await expect(groupsService.hasJoined("g2", "user-1")).resolves.toBe(false);
+
+    // user-2 can join g1 independently
+    await groupsService.joinGroup("g1", "user-2");
+    await expect(groupsService.hasJoined("g1", "user-1")).resolves.toBe(true);
+    await expect(groupsService.hasJoined("g1", "user-2")).resolves.toBe(true);
+  });
+
+  it("re-joining a group the user is already in does not overwrite timestamp or record a duplicate", async () => {
+    await groupsService.joinGroup("g1", "user-1");
+    const storedBefore = JSON.parse(
+      window.localStorage.getItem(MEMBERSHIPS_KEY) as string,
+    ) as Record<string, string>;
+    const initialTimestamp = storedBefore[membershipKey("user-1", "g1")];
+    expect(initialTimestamp).toBeTruthy();
+
+    // Call joinGroup again for the same user and group
+    await groupsService.joinGroup("g1", "user-1");
+
+    const storedAfter = JSON.parse(
+      window.localStorage.getItem(MEMBERSHIPS_KEY) as string,
+    ) as Record<string, string>;
+    expect(storedAfter[membershipKey("user-1", "g1")]).toBe(initialTimestamp);
+    expect(Object.keys(storedAfter)).toHaveLength(1);
+  });
+
+  it("returns false and avoids writing when groupId or userId is empty", async () => {
+    await expect(groupsService.hasJoined("", "user-1")).resolves.toBe(false);
+    await expect(groupsService.hasJoined("g1", "")).resolves.toBe(false);
+
+    await groupsService.joinGroup("", "user-1");
+    await groupsService.joinGroup("g1", "");
+    expect(window.localStorage.getItem(MEMBERSHIPS_KEY)).toBeNull();
   });
 
   it("treats malformed JSON under MEMBERSHIPS_KEY as empty", async () => {
     window.localStorage.setItem(MEMBERSHIPS_KEY, "not json either");
-    await expect(groupsService.hasJoined("g1")).resolves.toBe(false);
+    await expect(groupsService.hasJoined("g1", "user-1")).resolves.toBe(false);
   });
 });
