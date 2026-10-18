@@ -14,9 +14,11 @@ import { generateInviteCode } from "@/utils/invite";
  * server-side / no-`window` environments and should only be awaited from
  * client components.
  */
+export const INVITES_KEY = "rotula_invites";
+export const MEMBERSHIPS_KEY = "rotula_memberships";
 
-const INVITES_KEY = "kolo_invites";
-const MEMBERSHIPS_KEY = "kolo_memberships";
+const LEGACY_INVITES_KEY = "kolo_invites";
+const LEGACY_MEMBERSHIPS_KEY = "kolo_memberships";
 
 /**
  * Seeded demo groups so the dashboard has something to invite people to.
@@ -48,7 +50,13 @@ function hasWindow(): boolean {
 function readMap(key: string): Record<string, string> {
   if (!hasWindow()) return {};
   try {
-    const raw = window.localStorage.getItem(key);
+    const raw =
+      window.localStorage.getItem(key) ??
+      (key === INVITES_KEY
+        ? window.localStorage.getItem(LEGACY_INVITES_KEY)
+        : key === MEMBERSHIPS_KEY
+          ? window.localStorage.getItem(LEGACY_MEMBERSHIPS_KEY)
+          : null);
     return raw ? (JSON.parse(raw) as Record<string, string>) : {};
   } catch {
     return {};
@@ -76,16 +84,36 @@ export const groupsService = {
   },
 
   /**
-   * Generate a unique short invite code for a group and persist the mapping.
+   * Generate or retrieve a unique short invite code for a group and persist the mapping.
+   * If an active invite code already exists for the group, reuses it unless `rotate: true` is requested.
    * TODO: replace with real API — POST /groups/:id/invites
    */
-  async createInvite(groupId: string): Promise<Invite> {
+  async createInvite(
+    groupId: string,
+    options?: { rotate?: boolean },
+  ): Promise<Invite> {
     const group = await this.getGroup(groupId);
     if (!group) {
       throw new Error(`Unknown group: ${groupId}`);
     }
 
     const invites = readMap(INVITES_KEY);
+
+    // Reuse existing active invite code for this group unless rotate is explicitly requested
+    if (!options?.rotate) {
+      const existingEntry = Object.entries(invites).find(
+        ([, gId]) => gId === groupId,
+      );
+      if (existingEntry) {
+        return { code: existingEntry[0], groupId, createdAt: Date.now() };
+      }
+    } else {
+      for (const [c, gId] of Object.entries(invites)) {
+        if (gId === groupId) {
+          delete invites[c];
+        }
+      }
+    }
 
     let code = generateInviteCode();
     // Avoid the (astronomically unlikely) collision with an existing code.

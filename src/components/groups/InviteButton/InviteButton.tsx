@@ -25,16 +25,24 @@ export function InviteButton({ group }: InviteButtonProps) {
 
   const shareText = `Join my Kolo savings group "${group.name}" 💰`;
 
-  async function handleGenerate() {
+  async function generateInvite(rotate = false) {
     setStatus("generating");
     setCopied(false);
     try {
-      const invite = await groupsService.createInvite(group.id);
+      const invite = await groupsService.createInvite(group.id, { rotate });
       setUrl(buildInviteUrl(invite.code));
       setStatus("ready");
     } catch {
       setStatus("error");
     }
+  }
+
+  function handleGenerate() {
+    void generateInvite(false);
+  }
+
+  function handleRotate() {
+    void generateInvite(true);
   }
 
   async function handleNativeShare() {
@@ -153,6 +161,13 @@ export function InviteButton({ group }: InviteButtonProps) {
               </svg>
               WhatsApp
             </a>
+            <button
+              type="button"
+              onClick={handleRotate}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100"
+            >
+              Rotate link
+            </button>
           </div>
 
           <p className="mt-3 text-xs text-slate-400">
