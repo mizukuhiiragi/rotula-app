@@ -4,7 +4,7 @@ const traditions = [
   { name: "Chama", region: "East Africa", note: "People pool their contributions to make shared goals easier to reach." },
 ];
 
-export default function Testimonials() {
+export default function Traditions() {
   return (
     <section id="community" className="bg-white px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
       <div className="mx-auto max-w-7xl">
