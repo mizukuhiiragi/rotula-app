@@ -20,8 +20,9 @@ export const NextMilestone: React.FC<NextMilestoneProps> = ({
 }) => {
   const circleRadius = 70;
   const circleCircumference = 2 * Math.PI * circleRadius;
+  const clampedProgress = Math.min(100, Math.max(0, progressPercentage));
   const strokeDashoffset =
-    circleCircumference - (progressPercentage / 100) * circleCircumference;
+    circleCircumference - (clampedProgress / 100) * circleCircumference;
 
   return (
     <div className="bg-white rounded-2xl p-6 shadow-[0_12px_40px_rgba(0,0,0,0.08)] relative overflow-hidden h-full flex flex-col">
@@ -63,7 +64,7 @@ export const NextMilestone: React.FC<NextMilestoneProps> = ({
           </svg>
           <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
             <span className="text-xl font-semibold text-gray-800">
-              {progressPercentage}%
+              {clampedProgress}%
             </span>
             <span className="text-sm text-gray-500">
               ₦{amountLeft.toLocaleString()} left
