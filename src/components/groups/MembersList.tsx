@@ -76,8 +76,24 @@ export const MembersList: React.FC<MembersListProps> = ({
         </button>
       </div>
 
-      <div className="space-y-5">
-        {members.map((member) => (
+      {members.length === 0 ? (
+        <div className="text-center py-8 px-4 rounded-xl bg-[#f4f7f5] border border-gray-100">
+          <p className="text-sm font-medium text-gray-600">No members yet</p>
+          <p className="text-xs text-gray-400 mt-1 mb-4">
+            Share an invite link to bring members into this circle.
+          </p>
+          <button
+            type="button"
+            onClick={onInvite}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#047857] text-white hover:bg-[#065f46] transition-colors"
+          >
+            <UserPlus size={14} />
+            Invite Member
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-5">
+          {members.map((member) => (
           <div key={member.id} className="flex items-center justify-between">
             <div className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden mr-3">
@@ -115,7 +131,8 @@ export const MembersList: React.FC<MembersListProps> = ({
             </div>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
