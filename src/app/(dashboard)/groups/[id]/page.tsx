@@ -17,6 +17,7 @@ export default function GroupDetails() {
   const [group, setGroup] = useState<Group | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     let mounted = true;
@@ -25,17 +26,24 @@ export default function GroupDetails() {
         if (mounted) setIsLoading(false);
         return;
       }
-      const fetched = await groupsService.getGroup(params.id);
-      if (mounted) {
-        setGroup(fetched);
-        setIsLoading(false);
+      try {
+        const fetched = await groupsService.getGroup(params.id);
+        if (mounted) {
+          setGroup(fetched);
+          setIsLoading(false);
+        }
+      } catch {
+        if (mounted) {
+          setGroup(null);
+          setIsLoading(false);
+        }
       }
     };
     fetchGroup();
     return () => {
       mounted = false;
     };
-  }, [params?.id]);
+  }, [params?.id, retryKey]);
 
   // Mock data to match the Figma design
   const members: Member[] = [
@@ -103,8 +111,18 @@ export default function GroupDetails() {
 
   if (!group) {
     return (
-      <div className="max-w-6xl mx-auto p-4 md:p-8 bg-[#f4f7f5] min-h-screen flex justify-center items-center">
+      <div className="max-w-6xl mx-auto p-4 md:p-8 bg-[#f4f7f5] min-h-screen flex flex-col justify-center items-center gap-4">
         <p className="text-gray-500">Group not found or unavailable.</p>
+        <button
+          type="button"
+          onClick={() => {
+            setIsLoading(true);
+            setRetryKey((prev) => prev + 1);
+          }}
+          className="inline-flex items-center gap-2 rounded-lg bg-[#047857] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#065f46]"
+        >
+          Retry
+        </button>
       </div>
     );
   }
