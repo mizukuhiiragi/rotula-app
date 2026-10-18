@@ -2,11 +2,11 @@
 
 import React from "react";
 import { Home, Plane, Plus, ChevronRight, PiggyBank } from "lucide-react";
-import type { SavingsGroup } from "@/hooks/useGroups";
+import type { Group } from "@/types/group";
 import { ProgressRing } from "@/components/dashboard/ProgressRing";
 
 interface SavingsCirclesProps {
-  groups: SavingsGroup[];
+  groups: Group[];
   isLoading?: boolean;
 }
 
@@ -87,13 +87,24 @@ export function SavingsCircles({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {groups.map((group) => {
-            const progress = Math.min((group.saved / group.target) * 100, 100);
+            const saved = group.saved ?? 0;
+            const target =
+              group.target ??
+              (group.contributionAmount && group.memberCount
+                ? group.contributionAmount * group.memberCount
+                : 0);
+            const progress =
+              target > 0 ? Math.min((saved / target) * 100, 100) : 0;
+            const tag = group.tag ?? "SAVINGS";
+            const nextDate = group.nextDate ?? "—";
+            const avatars = group.avatars ?? [];
+            const currencySymbol = group.currency === "NGN" ? "₦" : "$";
 
             // Helper to get icon based on tag
             const getIcon = () => {
-              if (group.tag.includes("HOME"))
+              if (tag.includes("HOME"))
                 return <Home className="w-5 h-5 text-emerald-700" />;
-              if (group.tag.includes("TRAVEL"))
+              if (tag.includes("TRAVEL"))
                 return <Plane className="w-5 h-5 text-emerald-700" />;
               return <Home className="w-5 h-5 text-emerald-700" />;
             };
@@ -108,7 +119,7 @@ export function SavingsCircles({
                     {getIcon()}
                   </div>
                   <span className="text-[10px] font-bold tracking-wider text-emerald-700 bg-emerald-100 px-2 py-1 rounded-full uppercase">
-                    {group.tag}
+                    {tag}
                   </span>
                 </div>
 
@@ -128,14 +139,14 @@ export function SavingsCircles({
                     {group.name}
                   </h4>
                   <p className="text-sm text-gray-500">
-                    ${group.saved.toLocaleString()} saved
+                    {currencySymbol}{saved.toLocaleString()} saved
                   </p>
                 </div>
 
                 <div className="flex justify-between items-center w-full text-xs font-medium text-gray-500">
-                  <span>Next: {group.nextDate}</span>
+                  <span>Next: {nextDate}</span>
                   <div className="flex -space-x-1.5">
-                    {group.avatars.map((avatar, idx) =>
+                    {avatars.map((avatar, idx) =>
                       avatar.startsWith("+") ? (
                         <div
                           key={idx}

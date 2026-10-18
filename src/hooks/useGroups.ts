@@ -1,19 +1,15 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { groupsService } from "@/services/api/groups";
+import type { Group } from "@/types/group";
 
-export interface SavingsGroup {
-  id: string;
-  name: string;
-  tag: string;
-  saved: number;
-  target: number;
-  nextDate: string;
-  avatars: string[];
-}
+/**
+ * @deprecated Use Group from "@/types/group" directly. Kept for backwards compatibility.
+ */
+export type SavingsGroup = Group;
 
 export const useGroups = () => {
-  const [data, setData] = useState<SavingsGroup[] | null>(null);
+  const [data, setData] = useState<Group[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 

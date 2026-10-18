@@ -30,6 +30,15 @@ const SEED_GROUPS: Group[] = [
     memberCount: 8,
     currency: "NGN",
     contributionAmount: 10000,
+    tag: "COMMUNITY",
+    saved: 60000,
+    target: 80000,
+    nextDate: "Oct 24",
+    avatars: [
+      "https://i.pravatar.cc/150?u=1",
+      "https://i.pravatar.cc/150?u=2",
+      "+6",
+    ],
   },
   {
     id: "g2",
@@ -38,6 +47,15 @@ const SEED_GROUPS: Group[] = [
     memberCount: 5,
     currency: "NGN",
     contributionAmount: 25000,
+    tag: "FAMILY HOME",
+    saved: 75000,
+    target: 125000,
+    nextDate: "Nov 02",
+    avatars: [
+      "https://i.pravatar.cc/150?u=3",
+      "https://i.pravatar.cc/150?u=4",
+      "+3",
+    ],
   },
 ];
 
@@ -133,46 +151,10 @@ export const groupsService = {
 
   /**
    * Fetch active savings groups for the dashboard.
+   * Delegates to listGroups() so both surfaces read from the single group model.
    * TODO: replace with real API — GET /savings-groups
    */
-  async getSavingsGroups(): Promise<
-    Array<{
-      id: string;
-      name: string;
-      tag: string;
-      saved: number;
-      target: number;
-      nextDate: string;
-      avatars: string[];
-    }>
-  > {
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    return [
-      {
-        id: "1",
-        name: "Home Fund",
-        tag: "FAMILY HOME",
-        saved: 8200,
-        target: 10000,
-        nextDate: "Oct 24",
-        avatars: [
-          "https://i.pravatar.cc/150?u=1",
-          "https://i.pravatar.cc/150?u=2",
-          "+3",
-        ],
-      },
-      {
-        id: "2",
-        name: "Bali Retreat",
-        tag: "TRAVEL",
-        saved: 1450,
-        target: 3222,
-        nextDate: "Nov 02",
-        avatars: [
-          "https://i.pravatar.cc/150?u=3",
-          "https://i.pravatar.cc/150?u=4",
-        ],
-      },
-    ];
+  async getSavingsGroups(): Promise<Group[]> {
+    return this.listGroups();
   },
 };
