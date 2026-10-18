@@ -17,3 +17,21 @@ export const formatCompactNumber = (value: number): string =>
     notation: "compact",
     maximumFractionDigits: 1,
   }).format(value);
+
+/**
+ * Formats a numeric amount compactly with a localized currency symbol,
+ * e.g. 12_500 -> "$12.5K".
+ *
+ * @param value - The value to format.
+ * @param currency - ISO 4217 currency code (defaults to USD).
+ */
+export const formatCompactCurrency = (
+  value: number,
+  currency = "USD",
+): string =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
