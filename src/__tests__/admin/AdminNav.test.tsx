@@ -7,7 +7,9 @@ describe("AdminNav", () => {
     render(<AdminNav activeTab="overview" onSelectTab={vi.fn()} />);
 
     for (const tab of TABS) {
-      expect(screen.getByRole("button", { name: tab.label })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: tab.label }),
+      ).toBeInTheDocument();
     }
   });
 
