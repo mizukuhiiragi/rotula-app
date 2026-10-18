@@ -1,5 +1,10 @@
-import React from "react";
+"use client";
+
+import React, { useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
+
+const emptySubscribe = () => () => {};
 
 interface ModalProps {
   isOpen: boolean;
@@ -14,9 +19,15 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   children,
 }) => {
-  if (!isOpen) return null;
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
-  return (
+  if (!isOpen || !isClient) return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity">
       <div className="bg-white rounded-2xl w-full max-w-md mx-4 overflow-hidden shadow-xl transform transition-all">
         <div className="flex justify-between items-center p-5 border-b border-gray-100">
@@ -31,6 +42,7 @@ export const Modal: React.FC<ModalProps> = ({
         </div>
         <div className="p-5">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
