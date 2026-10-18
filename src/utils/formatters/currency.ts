@@ -33,5 +33,8 @@ export const formatCompactCurrency = (
     style: "currency",
     currency,
     notation: "compact",
+    // Pin the minimum to zero so whole amounts render as "$1M" rather than
+    // "$1.0M" on ICU versions that pad the compact unit to one decimal.
+    minimumFractionDigits: 0,
     maximumFractionDigits: 1,
   }).format(value);
