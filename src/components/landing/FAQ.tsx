@@ -39,7 +39,7 @@ export default function FAQ() {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="bg-[#f6f8fc] px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+    <section id="faq" className="scroll-mt-24 bg-[#f6f8fc] px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <div className="mb-10 text-center">
           <p className="text-xs font-bold uppercase tracking-[.2em] text-[#4775d1]">Straight answers</p>

@@ -7,7 +7,7 @@ const layers = [
 
 export default function StellarSection() {
   return (
-    <section id="stellar" className="relative overflow-hidden bg-[#101a2c] px-4 py-20 text-white sm:px-6 sm:py-28 lg:px-8">
+    <section id="stellar" className="relative scroll-mt-24 overflow-hidden bg-[#101a2c] px-4 py-20 text-white sm:px-6 sm:py-28 lg:px-8">
       <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-[#4775d1]/20 blur-3xl" aria-hidden="true" />
       <div className="relative mx-auto grid max-w-7xl gap-14 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
         <div>

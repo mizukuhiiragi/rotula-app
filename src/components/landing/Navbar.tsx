@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useState } from "react";
 
-const links = [
+export const navLinks = [
+  { href: "#features", label: "Features" },
   { href: "#how-it-works", label: "How it works" },
   { href: "#stellar", label: "Why Stellar" },
+  { href: "#community", label: "Community" },
   { href: "#faq", label: "FAQ" },
-];
+] as const;
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -27,7 +29,7 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">
-          {links.map(({ href, label }) => (
+          {navLinks.map(({ href, label }) => (
             <a key={href} href={href} className="text-sm font-medium text-slate-600 transition hover:text-[#101a2c]">
               {label}
             </a>
@@ -58,7 +60,7 @@ export default function Navbar() {
 
       {open && (
         <div className="mx-auto mt-2 max-w-7xl rounded-2xl border border-slate-200 bg-white p-3 shadow-lg md:hidden">
-          {links.map(({ href, label }) => (
+          {navLinks.map(({ href, label }) => (
             <a key={href} href={href} onClick={() => setOpen(false)} className="block rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50">
               {label}
             </a>
