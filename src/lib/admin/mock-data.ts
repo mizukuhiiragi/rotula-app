@@ -396,7 +396,7 @@ const METRICS: PlatformMetric[] = [
     id: "avg-size",
     label: "Avg. Group Size",
     value: "7.8",
-    changePct: 1.2,
+    changePct: -1.2,
     trend: "down",
     hint: "members per group",
   },
