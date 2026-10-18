@@ -4,6 +4,8 @@ import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 import type { GroupStatus, GroupStatusDatum } from "@/types/admin";
 
+import { ChartEmptyState } from "./ChartEmptyState";
+
 const STATUS_COLOR: Record<GroupStatus, string> = {
   active: "#006c49",
   forming: "#f59e0b",
@@ -13,6 +15,10 @@ const STATUS_COLOR: Record<GroupStatus, string> = {
 
 /** Donut chart showing the distribution of savings groups by status. */
 export function GroupStatusChart({ data }: { data: GroupStatusDatum[] }) {
+  if (data.length === 0) {
+    return <ChartEmptyState />;
+  }
+
   // Per-slice colour via a `fill` field on each datum (v3-friendly, avoids the
   // deprecated <Cell> child API).
   const chartData = data.map((entry) => ({
