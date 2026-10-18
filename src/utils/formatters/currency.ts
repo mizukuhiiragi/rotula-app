@@ -11,9 +11,4 @@ export const formatCurrency = (amount: number, currency = "USD"): string =>
     maximumFractionDigits: 2,
   }).format(amount);
 
-/** Formats a large number compactly, e.g. 12_500 -> "12.5K". */
-export const formatCompactNumber = (value: number): string =>
-  new Intl.NumberFormat("en-US", {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
+export { formatCompactNumber } from "./number";
