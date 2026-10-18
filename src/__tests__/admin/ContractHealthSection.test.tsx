@@ -37,4 +37,37 @@ describe("ContractHealthSection", () => {
     expect(screen.getByText("1,249")).toBeInTheDocument();
     expect(screen.queryByText("1.2K")).not.toBeInTheDocument();
   });
+
+  it("verifies fixture contracts have distinct and status-correlated last-invocation timestamps", async () => {
+    const { getAdminDashboardData } = await import("@/lib/admin/mock-data");
+    const data = await getAdminDashboardData();
+    const contracts = data.contracts;
+
+    // No two contracts share the same lastInvocationAt
+    const distinctTimestamps = new Set(
+      contracts.map((contract) => contract.lastInvocationAt),
+    );
+    expect(distinctTimestamps.size).toBe(contracts.length);
+
+    // Each timestamp parses as a valid ISO date
+    for (const contract of contracts) {
+      const parsed = Date.parse(contract.lastInvocationAt);
+      expect(Number.isNaN(parsed)).toBe(false);
+    }
+
+    // Degraded/down contracts have older lastInvocationAt than healthy contracts
+    const healthy = contracts.filter((c) => c.status === "healthy");
+    const degraded = contracts.filter(
+      (c) => c.status === "degraded" || c.status === "down",
+    );
+    if (healthy.length > 0 && degraded.length > 0) {
+      const latestDegraded = Math.max(
+        ...degraded.map((c) => Date.parse(c.lastInvocationAt)),
+      );
+      const earliestHealthy = Math.min(
+        ...healthy.map((c) => Date.parse(c.lastInvocationAt)),
+      );
+      expect(latestDegraded).toBeLessThan(earliestHealthy);
+    }
+  });
 });

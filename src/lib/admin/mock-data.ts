@@ -291,6 +291,21 @@ function makeContracts(): ContractHealthIndicator[] {
   ];
   return definitions.map((name, i) => {
     const status = i === 1 ? "degraded" : chance(0.1) ? "down" : "healthy";
+    const invocations24h = int(200, 5200);
+
+    let minutesAgo: number;
+    if (status === "down") {
+      minutesAgo = 24 * 60 + int(60, 720) + i * 37;
+    } else if (status === "degraded") {
+      minutesAgo = int(45, 120) + i * 11;
+    } else {
+      const averageIntervalMinutes = Math.max(
+        1,
+        Math.round((24 * 60) / invocations24h),
+      );
+      minutesAgo = Math.max(1, int(1, 4) * averageIntervalMinutes + i * 3);
+    }
+
     return {
       id: `ctr_${(30 + i).toString()}`,
       name,
@@ -300,8 +315,8 @@ function makeContracts(): ContractHealthIndicator[] {
       uptimePct:
         status === "healthy" ? 99 + next() : status === "degraded" ? 96 : 82,
       avgLatencyMs: status === "healthy" ? int(120, 320) : int(400, 900),
-      invocations24h: int(200, 5200),
-      lastInvocationAt: isoDaysAgo(0),
+      invocations24h,
+      lastInvocationAt: new Date(BASE_TIME - minutesAgo * 60_000).toISOString(),
     };
   });
 }
