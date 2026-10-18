@@ -3,17 +3,42 @@ import type { UserRole } from "./auth";
 /** Direction of a metric's period-over-period change. */
 export type TrendDirection = "up" | "down" | "flat";
 
-/** A headline platform metric shown as a card on the overview. */
-export interface PlatformMetric {
+export type MetricKind =
+  | "number"
+  | "currency"
+  | "currency-compact"
+  | "percent"
+  | "decimal";
+
+export interface NumericPlatformMetric {
   id: string;
   label: string;
-  /** Preformatted display value, e.g. "$1.2M" or "8,420". */
-  value: string;
+  /** Raw numeric metric value. */
+  value: number;
+  kind?: MetricKind;
+  /** Currency code when kind is currency or currency-compact. Defaults to USD. */
+  currency?: string;
   /** Percentage change vs. the previous period. */
   changePct: number;
   trend: TrendDirection;
   hint: string;
 }
+
+export interface TextPlatformMetric {
+  id: string;
+  label: string;
+  /** Textual metric value. */
+  value: string;
+  kind: "text";
+  currency?: string;
+  /** Percentage change vs. the previous period. */
+  changePct: number;
+  trend: TrendDirection;
+  hint: string;
+}
+
+/** A headline platform metric shown as a card on the overview. */
+export type PlatformMetric = NumericPlatformMetric | TextPlatformMetric;
 
 export type AccountStatus = "active" | "suspended" | "pending";
 

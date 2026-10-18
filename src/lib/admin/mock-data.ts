@@ -395,7 +395,8 @@ const METRICS: PlatformMetric[] = [
   {
     id: "users",
     label: "Total Users",
-    value: "8,420",
+    value: 8420,
+    kind: "number",
     changePct: 12.4,
     trend: "up",
     hint: "vs. last 30 days",
@@ -403,7 +404,8 @@ const METRICS: PlatformMetric[] = [
   {
     id: "saved",
     label: "Total Value Saved",
-    value: "$1.24M",
+    value: 1240000,
+    kind: "currency-compact",
     changePct: 8.1,
     trend: "up",
     hint: "across all groups",
@@ -411,7 +413,8 @@ const METRICS: PlatformMetric[] = [
   {
     id: "groups",
     label: "Active Groups",
-    value: "342",
+    value: 342,
+    kind: "number",
     changePct: 5.2,
     trend: "up",
     hint: "currently contributing",
@@ -419,7 +422,8 @@ const METRICS: PlatformMetric[] = [
   {
     id: "txns",
     label: "24h Transactions",
-    value: "1,203",
+    value: 1203,
+    kind: "number",
     changePct: 3.7,
     trend: "up",
     hint: "on-chain settlements",
@@ -427,7 +431,8 @@ const METRICS: PlatformMetric[] = [
   {
     id: "success",
     label: "Success Rate",
-    value: "98.6%",
+    value: 98.6,
+    kind: "percent",
     changePct: 0.4,
     trend: "up",
     hint: "transaction success",
@@ -435,7 +440,8 @@ const METRICS: PlatformMetric[] = [
   {
     id: "avg-size",
     label: "Avg. Group Size",
-    value: "7.8",
+    value: 7.8,
+    kind: "decimal",
     changePct: -1.2,
     trend: "down",
     hint: "members per group",
