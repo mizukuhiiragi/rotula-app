@@ -1,6 +1,6 @@
 import type { Group } from "@/types/group";
 import type { Invite, InviteResolution } from "@/types/invite";
-import { generateInviteCode } from "@/utils/invite";
+import { generateInviteCode, isValidInviteCode } from "@/utils/invite";
 
 /**
  * Mock groups service.
@@ -46,12 +46,22 @@ function hasWindow(): boolean {
 }
 
 function readMap(key: string): Record<string, string> {
-  if (!hasWindow()) return {};
+  const map: Record<string, string> = Object.create(null);
+  if (!hasWindow()) return map;
   try {
     const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+    if (!raw) return map;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object") {
+      for (const [k, v] of Object.entries(parsed)) {
+        if (typeof v === "string") {
+          map[k] = v;
+        }
+      }
+    }
+    return map;
   } catch {
-    return {};
+    return map;
   }
 }
 
@@ -90,7 +100,7 @@ export const groupsService = {
 
     let code = generateInviteCode();
     // Avoid the (astronomically unlikely) collision with an existing code.
-    while (invites[code]) {
+    while (Object.prototype.hasOwnProperty.call(invites, code)) {
       code = generateInviteCode();
     }
 
@@ -102,12 +112,17 @@ export const groupsService = {
 
   /**
    * Resolve an invite code back to its group.
+   * Validates code shape and ensures prototype properties cannot resolve.
    * TODO: replace with real API — GET /invites/:code
    */
   async getInvite(code: string): Promise<InviteResolution | null> {
+    if (!isValidInviteCode(code)) return null;
+
     const invites = readMap(INVITES_KEY);
+    if (!Object.prototype.hasOwnProperty.call(invites, code)) return null;
+
     const groupId = invites[code];
-    if (!groupId) return null;
+    if (typeof groupId !== "string" || !groupId) return null;
 
     const group = await this.getGroup(groupId);
     if (!group) return null;

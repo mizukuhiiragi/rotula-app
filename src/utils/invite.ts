@@ -9,13 +9,25 @@
 const CODE_ALPHABET =
   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
+export const INVITE_CODE_LENGTH = 9;
+
+/**
+ * Validates that an invite code matches the expected generated alphabet and length.
+ * Rejects non-strings, incorrect lengths, special characters, and prototype keys.
+ */
+export function isValidInviteCode(code: unknown): code is string {
+  if (typeof code !== "string") return false;
+  if (code.length !== INVITE_CODE_LENGTH) return false;
+  return /^[a-zA-Z0-9]{9}$/.test(code);
+}
+
 /**
  * Generate a short, URL-safe invite code, e.g. "abc123xyz".
  *
  * Uses `crypto.getRandomValues` when available for good uniqueness, falling
  * back to `Math.random` in environments without the Web Crypto API.
  */
-export function generateInviteCode(length = 9): string {
+export function generateInviteCode(length = INVITE_CODE_LENGTH): string {
   const alphabetLength = CODE_ALPHABET.length;
 
   const cryptoObj =

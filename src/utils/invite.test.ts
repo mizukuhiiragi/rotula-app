@@ -5,7 +5,42 @@ import {
   buildWhatsAppShareUrl,
   FALLBACK_INVITE_ORIGIN,
   generateInviteCode,
+  isValidInviteCode,
+  INVITE_CODE_LENGTH,
 } from "@/utils/invite";
+
+describe("isValidInviteCode", () => {
+  it("validates well-formed generated codes", () => {
+    for (let i = 0; i < 50; i++) {
+      const code = generateInviteCode();
+      expect(isValidInviteCode(code)).toBe(true);
+    }
+  });
+
+  it("rejects codes of incorrect length", () => {
+    expect(isValidInviteCode("")).toBe(false);
+    expect(isValidInviteCode("abc")).toBe(false);
+    expect(isValidInviteCode("12345678")).toBe(false);
+    expect(isValidInviteCode("1234567890")).toBe(false);
+  });
+
+  it("rejects codes with invalid characters", () => {
+    expect(isValidInviteCode("abc_12345")).toBe(false);
+    expect(isValidInviteCode("abc-12345")).toBe(false);
+    expect(isValidInviteCode("abc!12345")).toBe(false);
+    expect(isValidInviteCode("   123456")).toBe(false);
+  });
+
+  it("rejects non-string values including object prototypes", () => {
+    expect(isValidInviteCode(null)).toBe(false);
+    expect(isValidInviteCode(undefined)).toBe(false);
+    expect(isValidInviteCode(123456789)).toBe(false);
+    expect(isValidInviteCode({})).toBe(false);
+    expect(isValidInviteCode("__proto__")).toBe(false);
+    expect(isValidInviteCode("constructor")).toBe(false);
+    expect(isValidInviteCode("toString")).toBe(false);
+  });
+});
 
 describe("generateInviteCode", () => {
   it("produces a URL-safe code of the requested length", () => {

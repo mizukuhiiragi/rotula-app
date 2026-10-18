@@ -99,6 +99,20 @@ describe("groupsService.createInvite / getInvite", () => {
     window.localStorage.setItem(INVITES_KEY, "{not valid json");
     await expect(groupsService.getInvite("anything")).resolves.toBeNull();
   });
+
+  it("rejects prototype keys and inherited properties without resolving to a group", async () => {
+    await expect(groupsService.getInvite("__proto__")).resolves.toBeNull();
+    await expect(groupsService.getInvite("constructor")).resolves.toBeNull();
+    await expect(groupsService.getInvite("toString")).resolves.toBeNull();
+    await expect(groupsService.getInvite("valueOf")).resolves.toBeNull();
+  });
+
+  it("rejects malformed codes without lookup", async () => {
+    await expect(groupsService.getInvite("")).resolves.toBeNull();
+    await expect(groupsService.getInvite("short")).resolves.toBeNull();
+    await expect(groupsService.getInvite("bad_chars!")).resolves.toBeNull();
+    await expect(groupsService.getInvite("a".repeat(100))).resolves.toBeNull();
+  });
 });
 
 describe("groupsService.joinGroup / hasJoined", () => {
