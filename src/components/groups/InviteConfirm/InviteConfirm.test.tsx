@@ -2,7 +2,11 @@ import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { InviteConfirm } from "./InviteConfirm";
-import { groupsService, MEMBERSHIPS_KEY, membershipKey } from "@/services/api/groups";
+import {
+  groupsService,
+  MEMBERSHIPS_KEY,
+  membershipKey,
+} from "@/services/api/groups";
 import type { Group } from "@/types/group";
 
 const mockReplace = vi.fn();
@@ -20,7 +24,11 @@ vi.mock("next/navigation", () => ({
 let mockAuthState = {
   isAuthenticated: true,
   isLoading: false,
-  user: { id: "user-alpha", name: "Alpha", email: "alpha@example.com" } as { id: string; name: string; email: string } | null,
+  user: { id: "user-alpha", name: "Alpha", email: "alpha@example.com" } as {
+    id: string;
+    name: string;
+    email: string;
+  } | null,
 };
 
 vi.mock("@/hooks/useAuth", () => ({
@@ -72,12 +80,14 @@ describe("InviteConfirm Component", () => {
       isLoading: false,
       user: { id: "user-alpha", name: "Alpha", email: "alpha@example.com" },
     };
-    vi.spyOn(groupsService, "getInvite").mockImplementation(async (code: string) => {
-      if (code === "VALID1234") {
-        return { code: "VALID1234", group: sampleGroup };
-      }
-      return null;
-    });
+    vi.spyOn(groupsService, "getInvite").mockImplementation(
+      async (code: string) => {
+        if (code === "VALID1234") {
+          return { code: "VALID1234", group: sampleGroup };
+        }
+        return null;
+      },
+    );
   });
 
   it("redirects unauthenticated users to register with encoded redirect parameter", async () => {
@@ -100,7 +110,9 @@ describe("InviteConfirm Component", () => {
     render(<InviteConfirm code="VALID1234" />);
 
     expect(await screen.findByText("Lagos Savers Circle")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Join Group" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Join Group" }),
+    ).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Join Group" }));
 
@@ -147,7 +159,9 @@ describe("InviteConfirm Component", () => {
     render(<InviteConfirm code="VALID1234" />);
 
     // User Beta sees confirm screen and "Join Group" button
-    expect(await screen.findByRole("button", { name: "Join Group" })).toBeInTheDocument();
+    expect(
+      await screen.findByRole("button", { name: "Join Group" }),
+    ).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Join Group" }));
 

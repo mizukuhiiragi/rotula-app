@@ -114,7 +114,9 @@ describe("groupsService.joinGroup / hasJoined", () => {
     ) as Record<string, string>;
     const expectedKey = membershipKey("user-1", "g1");
     expect(stored[expectedKey]).toBeTruthy();
-    expect(new Date(stored[expectedKey]).toISOString()).toBe(stored[expectedKey]);
+    expect(new Date(stored[expectedKey]).toISOString()).toBe(
+      stored[expectedKey],
+    );
   });
 
   it("does not report a second user on the same browser as already a member", async () => {
