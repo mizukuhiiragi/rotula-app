@@ -11,13 +11,6 @@ export const formatCurrency = (amount: number, currency = "USD"): string =>
     maximumFractionDigits: 2,
   }).format(amount);
 
-/** Formats a large number compactly, e.g. 12_500 -> "12.5K". */
-export const formatCompactNumber = (value: number): string =>
-  new Intl.NumberFormat("en-US", {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
-
 /**
  * Formats a numeric amount compactly with a localized currency symbol,
  * e.g. 12_500 -> "$12.5K".
@@ -38,3 +31,7 @@ export const formatCompactCurrency = (
     minimumFractionDigits: 0,
     maximumFractionDigits: 1,
   }).format(value);
+
+// Re-exported so existing imports from this module keep working while the
+// implementations live together in `number.ts`.
+export { formatCompactNumber } from "./number";
