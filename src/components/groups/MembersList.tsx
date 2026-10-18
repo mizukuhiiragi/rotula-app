@@ -1,20 +1,9 @@
 import React from "react";
 import { UserPlus } from "lucide-react";
 
-export type MemberStatus =
-  | "CONTRIBUTED"
-  | "WAITING"
-  | "PENDING"
-  | "PAYOUT_RECEIVED"
-  | "LATE";
+import type { Member, MemberStatus } from "@/types/group";
 
-export interface Member {
-  id: string;
-  name: string;
-  role: string;
-  status: MemberStatus;
-  avatarUrl?: string;
-}
+export type { Member, MemberStatus };
 
 const STATUS_LABELS: Record<MemberStatus, string> = {
   CONTRIBUTED: "Contributed",
